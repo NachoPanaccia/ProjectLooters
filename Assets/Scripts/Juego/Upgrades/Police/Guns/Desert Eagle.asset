@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dbf624c780e4f84683aeed50c120213, type: 3}
+  m_Name: Desert Eagle
+  m_EditorClassIdentifier: 
+  upgradeName: Desert Eagle
+  description: The most potent handgun of folklore. Guaranteed to make you look badass.
+    Bird not included.
+  icon: {fileID: 0}
+  tier: 2
+  price: 1000
+  category: 0
+  owner: 0
+  magazineSize: 1
+  reloadTime: 2
+  fireRate: 0.5
+  spread: 0

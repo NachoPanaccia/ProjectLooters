@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfd349e51b19d234897f24df97883cb9, type: 3}
+  m_Name: Sunglasses
+  m_EditorClassIdentifier: 
+  upgradeName: Sunglasses
+  description: "It\u2019s advised not to look at explosions."
+  icon: {fileID: 0}
+  tier: 0
+  price: 0
+  category: 3
+  owner: 1
+  detectionRadius: 0

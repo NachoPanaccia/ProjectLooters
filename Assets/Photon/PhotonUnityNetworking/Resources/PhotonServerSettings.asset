@@ -1,0 +1,58 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9f3758f8f58fdef43803eb9be1df0608, type: 3}
+  m_Name: PhotonServerSettings
+  m_EditorClassIdentifier: 
+  AppSettings:
+    AppIdRealtime: 9a164c81-f6f8-46f0-bdef-562a74ad5ca0
+    AppIdFusion: 
+    AppIdChat: 
+    AppIdVoice: 
+    AppVersion: 
+    UseNameServer: 1
+    FixedRegion: 
+    Server: 
+    Port: 0
+    ProxyServer: 
+    Protocol: 0
+    EnableProtocolFallback: 1
+    AuthMode: 0
+    EnableLobbyStatistics: 0
+    NetworkLogging: 1
+  DevRegion: sa
+  PunLogging: 0
+  EnableSupportLogger: 0
+  RunInBackground: 1
+  StartInOfflineMode: 0
+  RpcList:
+  - ClickRpc
+  - DestroyRpc
+  - DestroySpaceship
+  - Fire
+  - RespawnSpaceship
+  - RPC_AsignarSlotVisual
+  - RPC_LimpiarSlot
+  - RPC_ActualizarSlotVisual
+  - RPC_EnviarNicknameAlMaster
+  - RPC_SolicitarCambioDeSlot
+  - RPC_ActualizarEstadoBotones
+  - RPC_EnviarEstadoAlNuevoMaster
+  - RPC_PedirEstado
+  - RPC_SetBotonIniciarPartidaEstado
+  - RPC_IniciarPartidaDesdeCliente
+  - RPC_ConfirmacionDeSlot
+  - RPC_ConfirmarSlotAntesDeIniciar
+  - RPC_Hit
+  - RPC_Stunned
+  DisableAutoOpenWizard: 1
+  ShowSettings: 0
+  DevRegionSetOnce: 1

@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2dbf624c780e4f84683aeed50c120213, type: 3}
+  m_Name: SCAR
+  m_EditorClassIdentifier: 
+  upgradeName: SCAR
+  description: "We\u2019re not sure about the rationale, but it glows golden while
+    the M4 only glows blue, so it\u2019s probably better."
+  icon: {fileID: 0}
+  tier: 2
+  price: 2000
+  category: 0
+  owner: 0
+  magazineSize: 10
+  reloadTime: 5
+  fireRate: 2
+  spread: 5
