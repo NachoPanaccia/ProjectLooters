@@ -42,6 +42,11 @@ public class Thief3Controller : MonoBehaviourPunCallbacks, IRobber, IShopClient
         _spawnPosition = transform.position;
         _gameManager.LooterInitialized();
         initialMoveSpeed = moveSpeed;
+
+        if (photonView.IsMine)
+        {
+            FindObjectOfType<CameraFollow>().SetTarget(transform);
+        }
     }
 
     private void Update()

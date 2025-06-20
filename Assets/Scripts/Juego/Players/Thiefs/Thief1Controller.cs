@@ -31,11 +31,14 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber, IShopClient
     [SerializeField] private float stunCooldownTime = 3f;
     private float stunCooldownTimer;
     private bool canBeStunned;
+
     [Header("Loot Parameters")]
     [SerializeField] int actual_loot;
     [SerializeField] int total_loot;
+
     [Header("Events")]
     public UnityEvent<int> DepositedLoot;
+
     private void Awake()
     {
         //_spriteRenderer = GetComponent<SpriteRenderer>();
@@ -44,6 +47,11 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber, IShopClient
         _spawnPosition = transform.position;
         _gameManager.LooterInitialized();
         initialMoveSpeed = moveSpeed;
+
+        if (photonView.IsMine)
+        {
+            FindObjectOfType<CameraFollow>().SetTarget(transform);
+        }
     }
 
     private void Update()

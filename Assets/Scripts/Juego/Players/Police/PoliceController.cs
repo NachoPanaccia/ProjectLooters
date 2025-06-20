@@ -19,6 +19,8 @@ public class PoliceController : MonoBehaviourPunCallbacks, IShopClient
 
     [Header("Melee Parameters")]
     [SerializeField] private float _meleeTime = 2f;
+
+
     private float _meleeTimer;
     [SerializeField] private Collider2D _meleeCollider;
     [SerializeField] ContactFilter2D contactFilter2D;
@@ -33,6 +35,11 @@ public class PoliceController : MonoBehaviourPunCallbacks, IShopClient
     {
         rb = GetComponent<Rigidbody2D>();
         initialMoveSpeed = moveSpeed;
+
+        if (photonView.IsMine)
+        {
+            FindObjectOfType<CameraFollow>().SetTarget(transform);
+        }
     }
 
     private void Update()

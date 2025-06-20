@@ -369,6 +369,9 @@ MonoBehaviour:
   stunCooldownTime: 3
   actual_loot: 0
   total_loot: 0
+  DepositedLoot:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!58 &-7678197508151899163
 CircleCollider2D:
   m_ObjectHideFlags: 0

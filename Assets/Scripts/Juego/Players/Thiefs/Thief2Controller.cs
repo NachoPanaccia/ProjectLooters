@@ -34,6 +34,7 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IShopClient
     [Header("Loot Parameters")]
     [SerializeField] int actual_loot;
     [SerializeField] int total_loot;
+
     private void Awake()
     {
         //_spriteRenderer = GetComponent<SpriteRenderer>();

@@ -18,19 +18,18 @@ public class CameraFollow : MonoBehaviourPunCallbacks
                 break;
             }
         }
-
         if (target == null)
         {
-            Debug.LogWarning("CameraFollow no encontró un objeto local para seguir.");
+            Debug.Log("No se encontro ningun jugador");
         }
     }
 
-    private void LateUpdate()
+    private void Update()
     {
-        if (target == null) return;
-
         Vector3 desiredPosition = target.position + offset;
         Vector3 smoothed = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed);
         transform.position = smoothed;
     }
+
+    public void SetTarget(Transform t) => target = t;
 }
