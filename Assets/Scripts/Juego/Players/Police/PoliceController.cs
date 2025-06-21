@@ -8,6 +8,7 @@ public class PoliceController : MonoBehaviourPunCallbacks, IShopClient
 {
     [SerializeField] private float moveSpeed = 5f;
     private float initialMoveSpeed;
+
     [SerializeField] private int currentMoney = 0;
     private readonly List<UpgradeData> misUpgrades = new List<UpgradeData>();
 

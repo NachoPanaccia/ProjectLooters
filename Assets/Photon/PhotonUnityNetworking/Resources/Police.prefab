@@ -352,7 +352,7 @@ MonoBehaviour:
   currentMoney: 0
   _noCopMask:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 0
   _meleeTime: 2
   _meleeCollider: {fileID: 4016682577374904967}
   contactFilter2D:
@@ -364,7 +364,7 @@ MonoBehaviour:
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 64
+      m_Bits: 0
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0

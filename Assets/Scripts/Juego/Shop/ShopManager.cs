@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
@@ -18,10 +18,16 @@ public class ShopManager : MonoBehaviour
 
     public void AbrirUI(GameObject jugadorGO)
     {
+        Debug.Log("estoy activando:" + panelShopUI.name + "Activo ahora: " + panelShopUI.activeSelf);
         RellenarUIPara(jugadorGO);
         panelShopUI.SetActive(true);
     }
-    public void CerrarUI() => panelShopUI.SetActive(false);
+
+    public void CerrarUI()
+    {
+        Debug.Log("<color=orange>ShopManager: CerrarUI()</color>");
+        panelShopUI.SetActive(false);
+    }
 
     private void RellenarUIPara(GameObject jugadorGO)
     {
@@ -45,15 +51,19 @@ public class ShopManager : MonoBehaviour
 
                 if (!cliente.Pagar(upg.price))
                 {
-                    Debug.Log("No tienes dinero suficiente");
+                    Debug.Log($"[SHOP] {jugadorGO.name} — sin dinero para {upg.upgradeName}");
                     return;
                 }
 
                 upg.ApplyUpgrade(jugadorGO);
-                cliente.A�adirUpgrade(upg);
+                cliente.AñadirUpgrade(upg);
                 btnObj.GetComponent<Button>().interactable = false;
+
+                Debug.Log($"[SHOP] {jugadorGO.name} compró {upg.upgradeName}");
             });
         }
+
+        Debug.Log("RellenarUI — botones creados: " + botonesActuales.Count);
     }
     private void Limpiar()
     {

@@ -4,10 +4,25 @@ using System.Linq;
 
 public class EquipmentManager : MonoBehaviour
 {
+    public static EquipmentManager Instancia;
+
     [Header("Todas las mejoras disponibles")]
     [SerializeField] private List<UpgradeData> allUpgrades;
 
     private Dictionary<PlayerType, List<UpgradeData>> upgradesPorJugador;
+
+    public void Awake()
+    {
+        if (Instancia == null)
+        {
+            Instancia = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
 
     private void Start()
     {
