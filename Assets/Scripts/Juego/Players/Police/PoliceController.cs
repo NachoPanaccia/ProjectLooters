@@ -4,31 +4,25 @@ using UnityEngine;
 using Photon.Pun;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(PhotonView))]
-public class PoliceController : MonoBehaviourPunCallbacks, IShopClient
+public class PoliceController : MonoBehaviourPunCallbacks
 {
-    [SerializeField] private float moveSpeed = 5f;
-    private float initialMoveSpeed;
-
-    [SerializeField] private int currentMoney = 0;
-    private readonly List<UpgradeData> misUpgrades = new List<UpgradeData>();
-
-    private Rigidbody2D rb;
-    private Vector2 movement;
-
     [Header("Gun Parameters")] 
     [SerializeField] private LayerMask _noCopMask;
 
     [Header("Melee Parameters")]
     [SerializeField] private float _meleeTime = 2f;
 
-
-    private float _meleeTimer;
+    [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private Collider2D _meleeCollider;
     [SerializeField] ContactFilter2D contactFilter2D;
     [SerializeField] private float stunTime = 1.5f;
+    [SerializeField] private float stunCooldownTime = 3f;
+    private float initialMoveSpeed;
+    private Rigidbody2D rb;
+    private Vector2 movement;
+    private float _meleeTimer;
     private float stunTimer;
     private bool isStunned;
-    [SerializeField] private float stunCooldownTime = 3f;
     private float stunCooldownTimer;
     private bool canBeStunned;
     
@@ -99,7 +93,6 @@ public class PoliceController : MonoBehaviourPunCallbacks, IShopClient
 
     private void Shoot(Vector3 mousePos)
     {
-        //Debug.Log("Bang!");
         Vector2 mousePos2d = new Vector2(mousePos.x, mousePos.y);
         Vector2 pos2d = new Vector2(transform.position.x, transform.position.y);
 
@@ -107,7 +100,6 @@ public class PoliceController : MonoBehaviourPunCallbacks, IShopClient
         
         if (hit != false)
         {
-            //Debug.Log("Hit: " + hit.transform.gameObject.name);
             IRobber robber = hit.transform.gameObject.GetComponent<IRobber>();
             if (robber != null)
             {
@@ -127,7 +119,6 @@ public class PoliceController : MonoBehaviourPunCallbacks, IShopClient
             IRobber robber = hit.transform.gameObject.GetComponent<IRobber>();
             if (robber != null)
             {
-                //Debug.Log("Wham!");
                 robber.Stunned();
             }
         }
@@ -135,7 +126,6 @@ public class PoliceController : MonoBehaviourPunCallbacks, IShopClient
 
     public void Stunned()
     {
-        //Debug.Log("Guard whacked!");
         photonView.RPC("RPC_Stunned", RpcTarget.All);
     }
     
@@ -155,13 +145,4 @@ public class PoliceController : MonoBehaviourPunCallbacks, IShopClient
             moveSpeed = initialMoveSpeed / 2f;
         }
     }
-
-    public int Dinero => currentMoney;
-    public bool Pagar(int costo)
-    {
-        if (currentMoney < costo) return false;
-        currentMoney -= costo;
-        return true;
-    }
-    public void AñadirUpgrade(UpgradeData upg) => misUpgrades.Add(upg);
 }

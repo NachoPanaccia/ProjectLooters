@@ -176,6 +176,7 @@ GameObject:
   - component: {fileID: -2598389946403457235}
   - component: {fileID: 7775864607129416270}
   - component: {fileID: -7678197508151899163}
+  - component: {fileID: -4352127500073446394}
   m_Layer: 6
   m_Name: Thief1
   m_TagString: Untagged
@@ -368,7 +369,6 @@ MonoBehaviour:
   stunTime: 1.5
   stunCooldownTime: 3
   actual_loot: 0
-  total_loot: 0
   DepositedLoot:
     m_PersistentCalls:
       m_Calls: []
@@ -407,6 +407,20 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &-4352127500073446394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7851205569575024567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 90a039381712b404e898ceedfdd09e61, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  debugUpgrades: []
+  loot: 0
 --- !u!1 &8834789589603957650
 GameObject:
   m_ObjectHideFlags: 0

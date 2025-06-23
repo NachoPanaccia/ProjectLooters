@@ -5,15 +5,13 @@ using UnityEngine;
 using Photon.Pun;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(PhotonView))]
-public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IShopClient
+public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber
 {
     [SerializeField] private float moveSpeed = 5f;
-    private float initialMoveSpeed;
     [SerializeField] private float respawnTime = 3f;
+    private float initialMoveSpeed;
     private float respawnTimer;
     private bool isAlive;
-
-    //private SpriteRenderer _spriteRenderer;
     private Rigidbody2D rb;
     private Vector2 movement;
     private GameManager _gameManager;
@@ -21,23 +19,21 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IShopClient
     
     [Header("Melee Parameters")]
     [SerializeField] private float _meleeTime = 2f;
-    private float _meleeTimer;
     [SerializeField] private Collider2D _meleeCollider;
     [SerializeField] ContactFilter2D contactFilter2D;
     [SerializeField] private float stunTime = 1.5f;
+    [SerializeField] private float stunCooldownTime = 3f;
+    private float _meleeTimer;
     private float stunTimer;
     private bool isStunned;
-    [SerializeField] private float stunCooldownTime = 3f;
     private float stunCooldownTimer;
     private bool canBeStunned;
     
     [Header("Loot Parameters")]
     [SerializeField] int actual_loot;
-    [SerializeField] int total_loot;
 
     private void Awake()
     {
-        //_spriteRenderer = GetComponent<SpriteRenderer>();
         rb = GetComponent<Rigidbody2D>();
         _gameManager = GameManager.instance;
         _spawnPosition = transform.position;
@@ -53,7 +49,6 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IShopClient
             if (respawnTimer >= respawnTime)
             {
                 isAlive = true;
-                //_spriteRenderer.enabled = true;
             }
             return;
         }
@@ -112,7 +107,7 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IShopClient
 
     public void DepositLoot()
     {
-        total_loot = actual_loot;
+        //total_loot = actual_loot;
         actual_loot = 0;
     }
     
@@ -134,13 +129,11 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IShopClient
     
     public void Hit()
     {
-        //Debug.Log("Thief 2 hit!");
         photonView.RPC("RPC_Hit", RpcTarget.All);
     }
     
     public void Stunned()
     {
-        //Debug.Log("Thief 2 whacked!");
         photonView.RPC("RPC_Stunned", RpcTarget.All);
     }
 
@@ -149,13 +142,12 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IShopClient
     {
         if (photonView.IsMine)
         {
-            //Debug.Log("I'm hit!");
+            
         }
         if (_gameManager.CanRespawn())
         {
             _gameManager.LooterDied();
             isAlive = false;
-            //_spriteRenderer.enabled = false;
             respawnTimer = 0;
             Respawn();
         }
@@ -188,13 +180,4 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IShopClient
     {
         transform.position = _spawnPosition;
     }
-
-    private readonly List<UpgradeData> misUpgrades = new List<UpgradeData>();
-    public bool Pagar(int costo)
-    {
-        if (total_loot < costo) return false;
-        total_loot -= costo;
-        return true;
-    }
-    public void AñadirUpgrade(UpgradeData upg) => misUpgrades.Add(upg);
 }

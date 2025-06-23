@@ -16,4 +16,5 @@ public abstract class UpgradeData : ScriptableObject
     public PlayerType owner;
 
     public abstract void ApplyUpgrade(GameObject targetPlayer);
+    public virtual void Unequip(GameObject target) { }
 }
