@@ -15,17 +15,16 @@ public class PoliceUpgradeHandler : PlayerUpgradeHandler
 
     public override void AplicarUpgrade(UpgradeData upg)
     {
-        if (upg.category == UpgradeCategory.Weapon)
-        {
-            var anterior = GetEquipado(UpgradeCategory.Weapon);
-            if (anterior != null)
-            {
-                anterior.Unequip(gameObject);
-            }
+        var cat = upg.category;
+        var anterior = GetEquipado(cat);
 
-            equipados[UpgradeCategory.Weapon] = upg;
+        if (anterior != null && anterior != upg)
+        {
+            anterior.Unequip(gameObject);
+            BorrarRegistros(anterior);
         }
 
+        equipados[cat] = upg;
         base.AplicarUpgrade(upg);
     }
 }

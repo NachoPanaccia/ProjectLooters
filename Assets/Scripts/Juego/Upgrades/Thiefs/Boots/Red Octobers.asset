@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Red Octobers
   description: 
-  icon: {fileID: 0}
+  icon: {fileID: -1695492910, guid: fa41ca5f4da1ae14e962690f5cb16eec, type: 3}
   tier: 2
   price: 1000
   category: 1
   owner: 1
-  enableDash: 1
+  habilitaDash: 1
   dashCooldown: 3
+  dashFuerza: 10

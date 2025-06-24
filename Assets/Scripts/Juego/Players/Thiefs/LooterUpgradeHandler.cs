@@ -17,9 +17,11 @@ public class LooterUpgradeHandler : PlayerUpgradeHandler
     {
         var cat = upg.category;
         var anterior = GetEquipado(cat);
-        if (anterior != null)
+
+        if (anterior != null && anterior != upg)
         {
             anterior.Unequip(gameObject);
+            BorrarRegistros(anterior);
         }
 
         equipados[cat] = upg;

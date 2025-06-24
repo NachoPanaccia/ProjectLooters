@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Sunglasses
   description: "It\u2019s advised not to look at explosions."
-  icon: {fileID: 0}
+  icon: {fileID: -1615463798, guid: 1998b9d947f1c3644b6bda710d2118db, type: 3}
   tier: 0
   price: 0
   category: 3

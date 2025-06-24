@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: Duffel Bag
   description: You can actually use your hands while carrying items? No wonder those
     clown guys always used these!
-  icon: {fileID: 0}
+  icon: {fileID: 1130926058, guid: fa41ca5f4da1ae14e962690f5cb16eec, type: 3}
   tier: 2
   price: 1000
   category: 2

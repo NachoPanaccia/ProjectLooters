@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: Sunglasses and Facemask
   description: "I know the pandemic\u2019s over, but I believe facemasks should still
     be in fashion."
-  icon: {fileID: 0}
+  icon: {fileID: -1615463798, guid: 1998b9d947f1c3644b6bda710d2118db, type: 3}
   tier: 1
   price: 750
   category: 3

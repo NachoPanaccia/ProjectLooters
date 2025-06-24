@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Winchester 1886
   description: "Someone has yee\u2019d their last haw."
-  icon: {fileID: 0}
+  icon: {fileID: -1929617814, guid: d853a407c899c5e4c9a2d5ef42d0df6f, type: 3}
   tier: 1
   price: 1500
   category: 0

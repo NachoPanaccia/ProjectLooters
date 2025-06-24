@@ -14,10 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upgradeName: Shoddy Tennis
   description: You should seriously not pull up to the function with these.
-  icon: {fileID: 0}
+  icon: {fileID: -1695492910, guid: fa41ca5f4da1ae14e962690f5cb16eec, type: 3}
   tier: 0
   price: 0
   category: 1
   owner: 1
-  enableDash: 0
+  habilitaDash: 0
   dashCooldown: 0
+  dashFuerza: 0

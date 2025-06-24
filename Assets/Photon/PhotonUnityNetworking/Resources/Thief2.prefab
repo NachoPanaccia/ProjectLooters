@@ -416,6 +416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90a039381712b404e898ceedfdd09e61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  debugUpgrades: []
   loot: 0
 --- !u!1 &8785633066297389703
 GameObject:

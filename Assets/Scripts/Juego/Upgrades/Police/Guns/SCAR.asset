@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: SCAR
   description: "We\u2019re not sure about the rationale, but it glows golden while
     the M4 only glows blue, so it\u2019s probably better."
-  icon: {fileID: 0}
+  icon: {fileID: -1929617814, guid: d853a407c899c5e4c9a2d5ef42d0df6f, type: 3}
   tier: 2
   price: 2000
   category: 0

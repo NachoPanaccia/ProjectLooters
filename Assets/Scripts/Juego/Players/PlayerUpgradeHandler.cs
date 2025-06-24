@@ -29,5 +29,11 @@ public abstract class PlayerUpgradeHandler : MonoBehaviour
         debugUpgrades.Add(upg);
     }
 
+    protected void BorrarRegistros(UpgradeData upg)
+    {
+        upgrades.Remove(upg);
+        debugUpgrades.Remove(upg);
+    }
+
     public bool HasUpgrade(UpgradeData upg) => upgrades.Contains(upg);
 }

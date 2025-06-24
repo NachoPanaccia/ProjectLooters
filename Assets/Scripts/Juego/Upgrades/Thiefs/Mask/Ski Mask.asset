@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: Ski Mask
   description: The inseam is a little bulky and kinda makes your head look like an
     egg, but hey, anonymity is guaranteed.
-  icon: {fileID: 0}
+  icon: {fileID: -1615463798, guid: 1998b9d947f1c3644b6bda710d2118db, type: 3}
   tier: 2
   price: 1500
   category: 3

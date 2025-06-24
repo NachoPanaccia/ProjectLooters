@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: Sawed-off
   description: "The other half doesn\u2019t actually die when extracted, so it\u2019s
     probably still out there somewhere. "
-  icon: {fileID: 0}
+  icon: {fileID: -1929617814, guid: d853a407c899c5e4c9a2d5ef42d0df6f, type: 3}
   tier: 0
   price: 1000
   category: 0

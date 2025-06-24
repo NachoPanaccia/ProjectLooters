@@ -15,7 +15,7 @@ MonoBehaviour:
   upgradeName: Bare Hands
   description: "My boxing instructor says I have two bricks in my hands. I hope they
     don\u2019t get in the way."
-  icon: {fileID: 0}
+  icon: {fileID: 1130926058, guid: fa41ca5f4da1ae14e962690f5cb16eec, type: 3}
   tier: 0
   price: 0
   category: 2

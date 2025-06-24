@@ -6,7 +6,7 @@ using Photon.Pun;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(PhotonView))]
-public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber
+public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber, IMovementProvider
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float respawnTime = 3f;
@@ -17,6 +17,7 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber
     private Vector2 movement;
     private GameManager _gameManager;
     private Vector3 _spawnPosition;
+    public Vector2 UltimaDireccion => movement;
 
     [Header("Melee Parameters")]
     [SerializeField] private float _meleeTime = 2f;
