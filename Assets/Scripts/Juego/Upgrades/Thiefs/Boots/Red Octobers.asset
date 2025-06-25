@@ -22,3 +22,5 @@ MonoBehaviour:
   habilitaDash: 1
   dashCooldown: 3
   dashFuerza: 10
+  modificaVelocidad: 1
+  nuevaVelocidad: 7

@@ -177,6 +177,7 @@ GameObject:
   - component: {fileID: 7775864607129416270}
   - component: {fileID: -7678197508151899163}
   - component: {fileID: -4352127500073446394}
+  - component: {fileID: -8026233405098624000}
   m_Layer: 6
   m_Name: Thief1
   m_TagString: Untagged
@@ -348,13 +349,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 438f1affa70733f4fbbcbb49c50b5a1a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 5
   respawnTime: 0
-  _meleeTime: 2
-  _meleeCollider: {fileID: 4721001570123898840}
-  contactFilter2D:
+  meleeCooldown: 2
+  meleeCollider: {fileID: 0}
+  contactFilter:
     useTriggers: 0
-    useLayerMask: 1
+    useLayerMask: 0
     useDepth: 0
     useOutsideDepth: 0
     useNormalAngle: 0
@@ -421,6 +421,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugUpgrades: []
   loot: 0
+--- !u!114 &-8026233405098624000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7851205569575024567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 793991962236d334dae45484ff028eb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultSpeed: 5
+  defaultCanDash: 0
+  defaultDashCD: 6
+  defaultDashForce: 7
+  dashDuration: 0.18
 --- !u!1 &8834789589603957650
 GameObject:
   m_ObjectHideFlags: 0

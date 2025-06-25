@@ -1,170 +1,116 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using UnityEngine.Events;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(PhotonView))]
-public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber, IMovementProvider
+[RequireComponent(typeof(Rigidbody2D), typeof(PhotonView), typeof(LooterMovementController))]
+public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber
 {
-    [SerializeField] private float moveSpeed = 5f;
+    [Header("Respawn")]
     [SerializeField] private float respawnTime = 3f;
-    private float initialMoveSpeed;
     private float respawnTimer;
-    private bool isAlive;
-    private Rigidbody2D rb;
-    private Vector2 movement;
-    private GameManager _gameManager;
-    private Vector3 _spawnPosition;
-    public Vector2 UltimaDireccion => movement;
+    private bool isAlive = true;
+    private Vector3 spawnPosition;
 
-    [Header("Melee Parameters")]
-    [SerializeField] private float _meleeTime = 2f;
-    [SerializeField] private Collider2D _meleeCollider;
-    [SerializeField] ContactFilter2D contactFilter2D;
+    [Header("Melee")]
+    [SerializeField] private float meleeCooldown = 2f;
+    [SerializeField] private Collider2D meleeCollider;
+    [SerializeField] private ContactFilter2D contactFilter;
+    private float meleeTimer;
+
+    [Header("Stun")]
     [SerializeField] private float stunTime = 1.5f;
     [SerializeField] private float stunCooldownTime = 3f;
-    private float _meleeTimer;
-    private float stunTimer;
-    private bool isStunned;
+    private bool canBeStunned = true;
     private float stunCooldownTimer;
-    private bool canBeStunned;
 
-    [Header("Loot Parameters")]
-    [SerializeField] int actual_loot;
+    [Header("Loot")]
+    [SerializeField] private int actual_loot;
 
     [Header("Events")]
     public UnityEvent<int> DepositedLoot;
 
+    private Rigidbody2D rb;
+    private GameManager gameManager;
+    private LooterMovementController moveCtrl;
+
+    
     private void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-        _gameManager = GameManager.instance;
-        _spawnPosition = transform.position;
-        _gameManager.LooterInitialized();
-        initialMoveSpeed = moveSpeed;
+        moveCtrl = GetComponent<LooterMovementController>();
+        gameManager = GameManager.instance;
+        spawnPosition = transform.position;
+
+        gameManager.LooterInitialized();
 
         if (photonView.IsMine)
-        {
             FindObjectOfType<CameraFollow>().SetTarget(transform);
-        }
     }
+    
 
     private void Update()
     {
         if (!isAlive)
         {
             respawnTimer += Time.deltaTime;
-            if (respawnTimer >= respawnTime)
-            {
-                isAlive = true;
-            }
+            if (respawnTimer >= respawnTime) isAlive = true;
             return;
         }
-        
+
         if (!photonView.IsMine) return;
-
-        if (_meleeTimer < _meleeTime)
-        {
-            _meleeTimer += Time.deltaTime;
-        }
         
-        if (isStunned)
-        {
-            stunTimer += Time.deltaTime;
-            if (stunTimer >= stunTime)
-            {
-                isStunned = false;
-                moveSpeed = initialMoveSpeed;
-            }
-        }
+        meleeTimer = Mathf.Min(meleeTimer + Time.deltaTime, meleeCooldown);
+        stunCooldownTimer = Mathf.Min(stunCooldownTimer + Time.deltaTime, stunCooldownTime);
+        if (stunCooldownTimer >= stunCooldownTime) canBeStunned = true;
 
-        if (!canBeStunned)
-        {
-            stunCooldownTimer += Time.deltaTime;
-            if (stunCooldownTimer >= stunCooldownTime)
-            {
-                canBeStunned = true;
-            }
-        }
-        
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
-
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 lookDir = mousePosition - transform.position;
-        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        transform.rotation = Quaternion.Euler(0f, 0f, angle);
-        
-        if ((Input.GetKeyDown("v") || Input.GetMouseButtonDown(0)) && _meleeTimer >= _meleeTime)
-        {
+        // Input Melee
+        if ((Input.GetKeyDown(KeyCode.V) || Input.GetMouseButtonDown(0)) && meleeTimer >= meleeCooldown)
             MeleeAttack();
+    }
+
+    
+    private void MeleeAttack()
+    {
+        meleeTimer = 0f;
+
+        var hits = new List<Collider2D>();
+        meleeCollider.OverlapCollider(contactFilter, hits);
+
+        foreach (var hit in hits)
+        {
+            if (hit.TryGetComponent<PoliceController>(out var guard))
+            {
+                guard.Stunned();
+                Debug.Log("Wham!");
+            }
         }
     }
-
-    private void FixedUpdate()
-    {
-        if (!photonView.IsMine) return;
-
-        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
-    }
-
-    public void GetLoot(int value)
-    {
-        actual_loot = value;
-    }
+    
+    public void GetLoot(int value) => actual_loot = value;
 
     public void DepositLoot()
     {
-        //total_loot += actual_loot;
         LevelManager.Instance.LooterDeposited(actual_loot, 1);
         actual_loot = 0;
     }
-
-    private void MeleeAttack()
-    {
-        List<Collider2D> meleeHits = new List<Collider2D>();
-        _meleeCollider.OverlapCollider(contactFilter2D, meleeHits);
-
-        foreach (var hit in meleeHits)
-        {
-            PoliceController guard = hit.transform.gameObject.GetComponent<PoliceController>();
-            if (guard != null)
-            {
-                Debug.Log("Wham!");
-                guard.Stunned();
-            }
-        }
-    }
-
-    public void Hit()
-    {
-        photonView.RPC("RPC_Hit", RpcTarget.All);
-    }
-
-    public void Stunned()
-    {
-        photonView.RPC("RPC_Stunned", RpcTarget.All);
-    }
+    
+    public void Hit() => photonView.RPC(nameof(RPC_Hit), RpcTarget.All);
+    public void Stunned() => photonView.RPC(nameof(RPC_Stunned), RpcTarget.All);
 
     [PunRPC]
     private void RPC_Hit()
     {
-        if (photonView.IsMine)
+        if (gameManager.CanRespawn())
         {
-            
-        }
-        if (_gameManager.CanRespawn())
-        {
-            _gameManager.LooterDied();
+            gameManager.LooterDied();
             isAlive = false;
             respawnTimer = 0;
             Respawn();
         }
         else
         {
-            _gameManager.LooterPermaDied();
+            gameManager.LooterPermaDied();
             isAlive = false;
             Destroy(gameObject);
         }
@@ -173,22 +119,12 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber, IMovementPro
     [PunRPC]
     private void RPC_Stunned()
     {
-        if (photonView.IsMine)
-        {
-            Debug.Log("I'm whacked!");
-        }
-        if (canBeStunned)
-        {
-            canBeStunned = false;
-            isStunned = true;
-            stunTimer = 0f;
-            stunCooldownTimer = 0f;
-            moveSpeed = initialMoveSpeed / 2f;
-        }
-    }
+        if (!canBeStunned) return;
 
-    private void Respawn()
-    {
-        transform.position = _spawnPosition;
+        canBeStunned = false;
+        stunCooldownTimer = 0f;
+        moveCtrl.SetStunned(stunTime);
     }
+    
+    private void Respawn() => transform.position = spawnPosition;
 }
