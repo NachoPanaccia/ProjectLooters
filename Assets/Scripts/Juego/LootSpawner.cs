@@ -70,7 +70,7 @@ public class LootSpawner : MonoBehaviourPunCallbacks
         int idx = 0;
         foreach(var loot in loots) {  
             pool += loot.spawn_weight;
-            if (pool >= roll) return idx;
+            if (pool >= roll) { return idx; }
             idx++;
         }
 
@@ -80,6 +80,7 @@ public class LootSpawner : MonoBehaviourPunCallbacks
     [PunRPC]
     void SpawnNewLoot(int loot_id)
     {
+        new_loot_id = loot_id;
         my_spriteRenderer.sprite = loots[loot_id].my_sprite;
         my_spriteRenderer.enabled = true;
     }
