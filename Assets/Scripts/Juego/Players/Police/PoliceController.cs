@@ -4,7 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(PhotonView))]
-public class PoliceController : MonoBehaviourPunCallbacks
+public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
 {
     [Header("Gun")] 
     [SerializeField] private LayerMask _noCopMask;
@@ -126,7 +126,7 @@ public class PoliceController : MonoBehaviourPunCallbacks
         
         if (hit != false)
         {
-            IRobber robber = hit.transform.gameObject.GetComponent<IRobber>();
+            IDamageable robber = hit.transform.gameObject.GetComponent<IDamageable>();
             if (robber != null)
             {
                 Debug.Log("I got him!");
@@ -151,7 +151,7 @@ public class PoliceController : MonoBehaviourPunCallbacks
         }
         foreach (var hit in meleeHits)
         {
-            IRobber robber = hit.transform.gameObject.GetComponent<IRobber>();
+            IDamageable robber = hit.transform.gameObject.GetComponent<IDamageable>();
             if (robber != null)
             {
                 robber.Stunned();
@@ -159,10 +159,6 @@ public class PoliceController : MonoBehaviourPunCallbacks
         }
     }
 
-    public void Stunned()
-    {
-        photonView.RPC("RPC_Stunned", RpcTarget.All);
-    }
     
     [PunRPC]
     private void RPC_Stunned()
@@ -207,5 +203,15 @@ public class PoliceController : MonoBehaviourPunCallbacks
     {
         _audioSource.maxDistance = meleeSoundRange;
         _audioSource.PlayOneShot(gunReloaded, 0.7f);
+    }
+
+    public void Hit()
+    {
+
+    }
+
+    public void Stunned()
+    {
+        photonView.RPC("RPC_Stunned", RpcTarget.All);
     }
 }

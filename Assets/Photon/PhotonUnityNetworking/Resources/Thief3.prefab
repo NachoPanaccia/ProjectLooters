@@ -262,6 +262,7 @@ GameObject:
   - component: {fileID: 6102564095067597244}
   - component: {fileID: 2155916317158673269}
   - component: {fileID: 2025050304958328625}
+  - component: {fileID: 3117348917919791886}
   - component: {fileID: 7512035262586632564}
   m_Layer: 7
   m_Name: Thief3
@@ -508,6 +509,23 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugUpgrades: []
   loot: 0
+--- !u!114 &3117348917919791886
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7851205569575024567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 793991962236d334dae45484ff028eb8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  defaultSpeed: 5
+  defaultCanDash: 0
+  defaultDashCD: 6
+  defaultDashForce: 7
+  dashDuration: 0.18
 --- !u!82 &7512035262586632564
 AudioSource:
   m_ObjectHideFlags: 0

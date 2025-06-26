@@ -5,7 +5,7 @@ using UnityEngine;
 using Photon.Pun;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(PhotonView))]
-public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IMovementProvider
+public class Thief2Controller : MonoBehaviourPunCallbacks, IMovementProvider, IDamageable
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float respawnTime = 3f;
@@ -113,16 +113,6 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IMovementPro
         rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
     }
 
-    public void GetLoot(int value)
-    {
-        actual_loot = value;
-    }
-
-    public void DepositLoot()
-    {
-        //total_loot = actual_loot;
-        actual_loot = 0;
-    }
     
     private void MeleeAttack()
     {

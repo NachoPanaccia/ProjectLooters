@@ -373,7 +373,6 @@ MonoBehaviour:
   meleeSoundRange: 15
   stunTime: 1.5
   stunCooldownTime: 3
-  actual_loot: 0
   DepositedLoot:
     m_PersistentCalls:
       m_Calls: []
@@ -425,6 +424,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   debugUpgrades: []
+  actual_loot: 0
   loot: 0
 --- !u!114 &-8026233405098624000
 MonoBehaviour:

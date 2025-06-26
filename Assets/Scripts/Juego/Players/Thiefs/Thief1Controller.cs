@@ -4,7 +4,7 @@ using Photon.Pun;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(PhotonView), typeof(LooterMovementController))]
-public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber
+public class Thief1Controller : MonoBehaviourPunCallbacks, IDamageable
 {
     [Header("Respawn")]
     [SerializeField] private float respawnTime = 3f;
@@ -28,8 +28,6 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber
     private bool canBeStunned = true;
     private float stunCooldownTimer;
 
-    [Header("Loot")]
-    [SerializeField] private int actual_loot;
 
     [Header("Events")]
     public UnityEvent<int> DepositedLoot;
@@ -102,13 +100,7 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber
         }
     }
     
-    public void GetLoot(int value) => actual_loot = value;
-
-    public void DepositLoot()
-    {
-        LevelManager.Instance.LooterDeposited(actual_loot, 1);
-        actual_loot = 0;
-    }
+    
     
     public void Hit() => photonView.RPC(nameof(RPC_Hit), RpcTarget.All);
     public void Stunned() => photonView.RPC(nameof(RPC_Stunned), RpcTarget.All);
@@ -121,6 +113,7 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber
         if (gameManager.CanRespawn())
         {
             gameManager.LooterDied();
+            GetComponent<IRobber>().LoseLoot();
             isAlive = false;
             respawnTimer = 0;
             Respawn();

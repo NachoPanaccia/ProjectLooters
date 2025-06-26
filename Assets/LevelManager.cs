@@ -14,9 +14,7 @@ public class LevelManager : MonoBehaviour
     private int permaDeadCount = 0;
 
     [Header("Money Counter")]
-    private int moneyCounterP1 = 0;
-    private int moneyCounterP2 = 0;
-    private int moneyCounterP3 = 0;
+    private int moneyCounter = 0;
     private int objmoney = 300;
 
     [Header("Events")]
@@ -86,23 +84,10 @@ public class LevelManager : MonoBehaviour
             CopWon?.Invoke(true); 
         }
     }
-    public void LooterDeposited(int lootAmount,int player)
+    public void LooterDeposited(int lootAmount)
     {
-        switch (player)
-        {
-            case 1:
-                moneyCounterP1 += lootAmount;
-                break;
-            case 2:
-                moneyCounterP2 += lootAmount;
-                break;
-            case 3:
-                moneyCounterP3 += lootAmount;
-                break;
-            default:
-                break;
-        }
-        if(moneyCounterP1 + moneyCounterP2 + moneyCounterP3 >= objmoney)
+        moneyCounter += lootAmount;
+        if (moneyCounter >= objmoney)
         {
             LooterWon?.Invoke(false);
             Debug.Log("Los looters han ganado.");
