@@ -15,7 +15,7 @@ public class LevelManager : MonoBehaviourPunCallbacks
 
     [Header("Money Counter")]
     private int moneyCounter = 0;
-    private int objmoney = 300;
+    [SerializeField] private int objmoney = 300;
 
     [Header("Events")]
     public UnityEvent<wincondition> con;

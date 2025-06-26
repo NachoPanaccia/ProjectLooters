@@ -102,13 +102,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   loots:
   - my_sprite: {fileID: -92054780, guid: fa41ca5f4da1ae14e962690f5cb16eec, type: 3}
-    value: 10
+    value: 100
     spawn_weight: 60
   - my_sprite: {fileID: 1839545122, guid: fa41ca5f4da1ae14e962690f5cb16eec, type: 3}
-    value: 20
+    value: 400
     spawn_weight: 30
   - my_sprite: {fileID: 1742627757, guid: fa41ca5f4da1ae14e962690f5cb16eec, type: 3}
-    value: 100
+    value: 1000
     spawn_weight: 10
   spawn_cooldown: 3
   interact_button: 101
