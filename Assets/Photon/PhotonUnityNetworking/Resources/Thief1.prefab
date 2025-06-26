@@ -426,6 +426,8 @@ MonoBehaviour:
   debugUpgrades: []
   actual_loot: 0
   loot: 0
+  back_size: 1
+  back_used: 0
 --- !u!114 &-8026233405098624000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -443,6 +445,7 @@ MonoBehaviour:
   defaultDashCD: 6
   defaultDashForce: 7
   dashDuration: 0.18
+  canDash: 0
 --- !u!82 &1338668571978170183
 AudioSource:
   m_ObjectHideFlags: 0

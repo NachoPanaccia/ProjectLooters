@@ -54,7 +54,7 @@ public class LootSpawner : MonoBehaviourPunCallbacks
         {
             if (Input.GetKeyDown(interact_button))
             {
-                thief.GetLoot(loots[new_loot_id].value);
+                if (!thief.GetLoot(loots[new_loot_id].value)) return;
 
                 photonView.RPC("StealLoot", RpcTarget.All);
             }

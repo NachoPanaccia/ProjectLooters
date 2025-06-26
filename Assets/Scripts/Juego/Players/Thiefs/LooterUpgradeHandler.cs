@@ -8,6 +8,9 @@ public class LooterUpgradeHandler : PlayerUpgradeHandler, IRobber
     [Header("Loot")]
     [SerializeField] private int actual_loot;
     [SerializeField] private int loot = 0;
+    public int back_size = 1;
+    [SerializeField] int back_used = 0;
+
 
     public int Loot => loot;
 
@@ -17,8 +20,6 @@ public class LooterUpgradeHandler : PlayerUpgradeHandler, IRobber
         loot -= precio;
         _uiManager.UpdateWallet(loot);
     }
-
-    public void AgregarLoot(int v) => loot += v;
 
     private UIManager _uiManager;
 
@@ -43,9 +44,12 @@ public class LooterUpgradeHandler : PlayerUpgradeHandler, IRobber
         _uiManager.UpdateWallet(loot);
     }
 
-    public void GetLoot(int value) 
+    public bool GetLoot(int value) 
     {
+        if (back_used >= back_size) return false;
         actual_loot += value;
+        back_used += 1;
+        return true;
     }
 
     public void DepositLoot()
@@ -53,11 +57,13 @@ public class LooterUpgradeHandler : PlayerUpgradeHandler, IRobber
         LevelManager.Instance.LooterDeposited(actual_loot);
         loot += actual_loot;
         actual_loot = 0;
+        back_used = 0;
         _uiManager.UpdateWallet(loot);
     }
 
     public void LoseLoot() 
     {
         actual_loot = 0;
+        back_used = 0;
     }
 }
