@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Events;
@@ -18,7 +19,8 @@ public class GameManager : MonoBehaviour
     [Header("Events")]
     public UnityEvent onLooterPermaDied;
 
-    public bool[] connected_player = new bool[4];
+    public string policeName;
+    public Dictionary<string, bool> connected_player;
     public UnityEvent forcePause = new UnityEvent();
     public UnityEvent forceUnPause = new UnityEvent();
     public UnityEvent forceLotersWin = new UnityEvent();

@@ -47,9 +47,11 @@ public class GameInitializer : MonoBehaviourPunCallbacks
                 break;
         }
 
+        yield return new WaitForSeconds(2);
         if (slot >= -1 && slot <= 2)
         {
-            gameManager.connected_player[slot + 1] = true;
+            GameManager.instance.connected_player[PhotonNetwork.LocalPlayer.NickName] = true;
+            if (slot == -1) GameManager.instance.policeName = PhotonNetwork.LocalPlayer.NickName;
         }
     }
 
