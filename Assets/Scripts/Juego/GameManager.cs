@@ -18,6 +18,10 @@ public class GameManager : MonoBehaviour
     [Header("Events")]
     public UnityEvent onLooterPermaDied;
 
+    public bool[] connected_player = new bool[4];
+    public UnityEvent forcePause = new UnityEvent();
+    public UnityEvent forceUnPause = new UnityEvent();
+    public UnityEvent forceLotersWin = new UnityEvent();
 
     public static GameManager instance;
     private void Awake()
@@ -101,4 +105,7 @@ public class GameManager : MonoBehaviour
     {
         return playingLooters;
     }
+
+
+    
 }

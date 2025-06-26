@@ -8,6 +8,13 @@ public class GameChat : MonoBehaviourPunCallbacks
     [SerializeField] GameObject msg_pref;
     [SerializeField] Transform chat_pos;
 
+    GameManager gameManager;
+
+    private void Start()
+    {
+        gameManager = GameManager.instance;
+    }
+
 
     [PunRPC]
     public void ShowMSG(string msg)
@@ -31,5 +38,10 @@ public class GameChat : MonoBehaviourPunCallbacks
 
         photonView.RPC("ShowMSG", RpcTarget.All, mensaje);
         photonView.RPC("ShowMSG", RpcTarget.All, mensajeTotal);
+
+        int actorID = otherPlayer.ActorNumber;
+        int slot = (int)PhotonNetwork.CurrentRoom.CustomProperties[$"slot_{actorID}"];
+        gameManager.connected_player[slot + 1] = false;
+        gameManager.forcePause.Invoke();
     }
 }

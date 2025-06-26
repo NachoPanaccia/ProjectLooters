@@ -1,8 +1,11 @@
 
+using Photon.Pun;
+using Photon.Pun.UtilityScripts;
+using Photon.Realtime;
 using TMPro;
 using UnityEngine;
 
-public class WinConditionMsg : MonoBehaviour
+public class WinConditionMsg : MonoBehaviourPunCallbacks
 {
     TextMeshProUGUI my_textMesh;
 
@@ -28,7 +31,13 @@ public class WinConditionMsg : MonoBehaviour
                 break;
 
         }
+
+        PhotonNetwork.LeaveRoom();
     }
 
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        Debug.Log("Se fue de la Room");
+    }
 
 }

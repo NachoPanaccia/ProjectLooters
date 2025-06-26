@@ -2,6 +2,7 @@ using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
 using System.Collections;
+using Photon.Pun.Demo.PunBasics;
 
 public class GameInitializer : MonoBehaviourPunCallbacks
 {
@@ -13,8 +14,10 @@ public class GameInitializer : MonoBehaviourPunCallbacks
     [SerializeField] private Transform spawnPolicia;
     [SerializeField] private Transform[] spawnsLadrones;
 
+    GameManager gameManager;
     protected new void OnEnable()
-    {
+    {     
+        gameManager = GameManager.instance;
         StartCoroutine(EsperarDatosYSpawnear());
     }
 
@@ -43,9 +46,13 @@ public class GameInitializer : MonoBehaviourPunCallbacks
                 Debug.LogWarning("Slot inválido recibido.");
                 break;
         }
+
+        if (slot >= -1 && slot <= 2)
+        {
+            gameManager.connected_player[slot + 1] = true;
+        }
     }
 
 
 
-    
 }
