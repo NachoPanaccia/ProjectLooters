@@ -72,11 +72,6 @@ public class GameManager : MonoBehaviour
         return (currentRespawns > 0);
     }
 
-    public int getplayingLooters()
-    {
-        return playingLooters;
-    }
-
     [PunRPC]
     private void GameEnd( wincondition winid)
     {
