@@ -351,7 +351,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _noCopMask:
     serializedVersion: 2
-    m_Bits: 128
+    m_Bits: 1920
   gunShot: {fileID: 8300000, guid: 3a41df94f49a8134eb4b16fb8e5c4e10, type: 3}
   gunReloaded: {fileID: 8300000, guid: 8d3ce345093e0d94ca21cbcaeedb3483, type: 3}
   gunCooldownTime: 2.5
