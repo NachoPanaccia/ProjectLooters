@@ -1,5 +1,7 @@
+
 using System.Collections;
 using System.Collections.Generic;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -18,8 +20,7 @@ public class LevelManager : MonoBehaviour
     private int objmoney = 300;
 
     [Header("Events")]
-    public UnityEvent<bool> CopWon;
-    public UnityEvent<bool> LooterWon;
+    public UnityEvent<wincondition> con;
 
     private void Awake()
     {
@@ -48,7 +49,7 @@ public class LevelManager : MonoBehaviour
             {
                 timer = 0f;
                 timerRunning = false;
-                CopWon?.Invoke(true);
+                OnConditionMet(wincondition.tiempo);
             }
         }
     }
@@ -81,17 +82,36 @@ public class LevelManager : MonoBehaviour
         if (permaDeadCount >= GameManager.instance.getplayingLooters() - 1)
         {
             Debug.Log("Todos los looters han sido eliminados. El guardia gana.");
-            CopWon?.Invoke(true); 
+            OnConditionMet(wincondition.lootpermadead); 
         }
+    }
+
+    public void CopDied()
+    {
+        OnConditionMet(wincondition.copdead);
     }
     public void LooterDeposited(int lootAmount)
     {
         moneyCounter += lootAmount;
         if (moneyCounter >= objmoney)
         {
-            LooterWon?.Invoke(false);
+            OnConditionMet(wincondition.quota);
             Debug.Log("Los looters han ganado.");
         }
     }
+
+    // WIN ID = ( 1 = Tiempo , 2 = LootersPermaDead , 3 = Cop Died , 4 = Quota Reached)
+    [PunRPC]
+    private void OnConditionMet( wincondition winid)
+    {
+        con?.Invoke(winid);
+    }
 }
 
+public enum wincondition
+{
+    tiempo,
+    lootpermadead,
+    copdead,
+    quota
+}

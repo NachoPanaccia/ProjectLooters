@@ -1,14 +1,22 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.SearchService;
+using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
     private int playingLooters;
     [SerializeField] private int initialRespawns;
     private int currentRespawns;
+
+    [SerializeField] String looterswinscene;
+    [SerializeField] String policewinscene;
+    public wincondition actualwin;
+
 
     [Header("Events")]
     public UnityEvent onLooterPermaDied;
@@ -34,8 +42,7 @@ public class GameManager : MonoBehaviour
 
         if (LevelManager.Instance != null)
         {
-            LevelManager.Instance.CopWon.AddListener(GameEnd);
-            LevelManager.Instance.LooterWon.AddListener(GameEnd);
+            LevelManager.Instance.con.AddListener(GameEnd);
         }
     }
 
@@ -65,16 +72,36 @@ public class GameManager : MonoBehaviour
         return (currentRespawns > 0);
     }
 
-    private void GameEnd(bool winner)
+    public int getplayingLooters()
     {
-        Debug.Log("El tiempo del nivel terminó. El GameManager recibió el evento.");
-        if (winner)
+        return playingLooters;
+    }
+
+    [PunRPC]
+    private void GameEnd( wincondition winid)
+    {
+        actualwin = winid;
+        switch (winid)
         {
-            Debug.Log("El guardia ganó.");
-        }
-        else
-        {
-            Debug.Log("Los looters ganaron.");
+            case wincondition.tiempo:
+                SceneManager.LoadScene(policewinscene);
+                Debug.Log("El guardia ganó por tiempo");
+                break;
+            case wincondition.lootpermadead:
+                SceneManager.LoadScene(policewinscene);
+                Debug.Log("El guardia gano porque muerieron los looters.");
+                break;
+            case wincondition.copdead:
+                SceneManager.LoadScene(looterswinscene);
+                Debug.Log("Los looters ganaron porque murio el policia");
+                break;
+            case wincondition.quota:
+                SceneManager.LoadScene(looterswinscene);
+                Debug.Log("Los looters llegaron al dinero requeriod");
+                break;
+            default :
+                Debug.Log("ERROR ID NO RECONOCIDO");
+                break;
         }
     }
 
@@ -82,6 +109,4 @@ public class GameManager : MonoBehaviour
     {
         return playingLooters;
     }
-
-
 }
