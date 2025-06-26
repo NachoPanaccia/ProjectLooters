@@ -5,7 +5,7 @@ using Photon.Pun;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class LevelManager : MonoBehaviour
+public class LevelManager : MonoBehaviourPunCallbacks
 {
     public static LevelManager Instance { get; private set; }
 
@@ -48,8 +48,8 @@ public class LevelManager : MonoBehaviour
             if (timer <= 0f)
             {
                 timer = 0f;
-                timerRunning = false;
-                OnConditionMet(wincondition.tiempo);
+                timerRunning = false; 
+                photonView.RPC("OnConditionMet",RpcTarget.All,wincondition.tiempo);
             }
         }
     }
@@ -82,20 +82,20 @@ public class LevelManager : MonoBehaviour
         if (permaDeadCount >= GameManager.instance.getplayingLooters() - 1)
         {
             Debug.Log("Todos los looters han sido eliminados. El guardia gana.");
-            OnConditionMet(wincondition.lootpermadead); 
+            photonView.RPC("OnConditionMet", RpcTarget.All,wincondition.lootpermadead); 
         }
     }
 
     public void CopDied()
     {
-        OnConditionMet(wincondition.copdead);
+        photonView.RPC("OnConditionMet", RpcTarget.All,wincondition.copdead);
     }
     public void LooterDeposited(int lootAmount)
     {
         moneyCounter += lootAmount;
         if (moneyCounter >= objmoney)
         {
-            OnConditionMet(wincondition.quota);
+            photonView.RPC("OnConditionMet", RpcTarget.All,wincondition.quota);
             Debug.Log("Los looters han ganado.");
         }
     }

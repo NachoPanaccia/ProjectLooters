@@ -1,125 +1,87 @@
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using UnityEngine.Events;
 
-[RequireComponent(typeof(Rigidbody2D), typeof(PhotonView))]
-public class Thief3Controller : MonoBehaviourPunCallbacks, IMovementProvider, IDamageable
+[RequireComponent(typeof(Rigidbody2D), typeof(PhotonView), typeof(LooterMovementController))]
+public class Thief3Controller : MonoBehaviourPunCallbacks, IDamageable
 {
-    [SerializeField] private float moveSpeed = 5f;
+    [Header("Respawn")]
     [SerializeField] private float respawnTime = 3f;
     [SerializeField] private AudioClip killed;
-    private float initialMoveSpeed;
     private float respawnTimer;
-    private bool isAlive;
-    private Rigidbody2D rb;
-    private AudioSource _audioSource;
-    private Vector2 movement;
-    private GameManager _gameManager;
-    private Vector3 _spawnPosition;
-    public Vector2 UltimaDireccion => movement;
+    private bool isAlive = true;
+    private Vector3 spawnPosition;
 
     [Header("Melee")]
-    [SerializeField] private float _meleeTime = 2f;
-    [SerializeField] private Collider2D _meleeCollider;
-    [SerializeField] ContactFilter2D contactFilter2D;
-    private float _meleeTimer;
+    [SerializeField] private float meleeCooldown = 2f;
+    [SerializeField] private Collider2D meleeCollider;
+    [SerializeField] private ContactFilter2D contactFilter;
+    private float meleeTimer;
     [SerializeField] private AudioClip meleeHit;
     [SerializeField] private AudioClip meleeMiss;
     [SerializeField] private float meleeSoundRange = 15f;
 
+    [Header("Stun")]
     [SerializeField] private float stunTime = 1.5f;
     [SerializeField] private float stunCooldownTime = 3f;
-    private float stunTimer;
-    private bool isStunned;
+    private bool canBeStunned = true;
     private float stunCooldownTimer;
-    private bool canBeStunned;
-    
-    [Header("Loot Parameters")]
-    [SerializeField] int actual_loot;
+
+
+    [Header("Events")]
+    public UnityEvent<int> DepositedLoot;
+
+    private Rigidbody2D rb;
+    private AudioSource _audioSource;
+    private GameManager gameManager;
+    private LooterMovementController moveCtrl;
+
 
     private void Awake()
     {
         _audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody2D>();
-        _gameManager = GameManager.instance;
-        _spawnPosition = transform.position;
-        _gameManager.LooterInitialized();
-        initialMoveSpeed = moveSpeed;
+        moveCtrl = GetComponent<LooterMovementController>();
+        gameManager = GameManager.instance;
+        spawnPosition = transform.position;
+
+        gameManager.LooterInitialized();
 
         if (photonView.IsMine)
-        {
             FindObjectOfType<CameraFollow>().SetTarget(transform);
-        }
     }
+
 
     private void Update()
     {
         if (!isAlive)
         {
             respawnTimer += Time.deltaTime;
-            if (respawnTimer >= respawnTime)
-            {
-                isAlive = true;
-            }
+            if (respawnTimer >= respawnTime) isAlive = true;
             return;
         }
-        
+
         if (!photonView.IsMine) return;
 
-        if (_meleeTimer < _meleeTime)
-        {
-            _meleeTimer += Time.deltaTime;
-        }
-        
-        if (isStunned)
-        {
-            stunTimer += Time.deltaTime;
-            if (stunTimer >= stunTime)
-            {
-                isStunned = false;
-                moveSpeed = initialMoveSpeed;
-            }
-        }
+        meleeTimer = Mathf.Min(meleeTimer + Time.deltaTime, meleeCooldown);
+        stunCooldownTimer = Mathf.Min(stunCooldownTimer + Time.deltaTime, stunCooldownTime);
+        if (stunCooldownTimer >= stunCooldownTime) canBeStunned = true;
 
-        if (!canBeStunned)
-        {
-            stunCooldownTimer += Time.deltaTime;
-            if (stunCooldownTimer >= stunCooldownTime)
-            {
-                canBeStunned = true;
-            }
-        }
-
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
-
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2 lookDir = mousePosition - transform.position;
-        float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-        transform.rotation = Quaternion.Euler(0f, 0f, angle);
-        
-        if ((Input.GetKeyDown("v") || Input.GetMouseButtonDown(0)) && _meleeTimer >= _meleeTime)
-        {
+        // Input Melee
+        if ((Input.GetKeyDown(KeyCode.V) || Input.GetMouseButtonDown(0)) && meleeTimer >= meleeCooldown)
             MeleeAttack();
-        }
     }
 
-    private void FixedUpdate()
-    {
-        if (!photonView.IsMine) return;
 
-        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
-    }
-
-    
     private void MeleeAttack()
     {
-        List<Collider2D> meleeHits = new List<Collider2D>();
-        _meleeCollider.OverlapCollider(contactFilter2D, meleeHits);
+        meleeTimer = 0f;
 
-        if (meleeHits.Count == 0)
+        var hits = new List<Collider2D>();
+        meleeCollider.OverlapCollider(contactFilter, hits);
+
+        if (hits.Count == 0)
         {
             photonView.RPC("RPC_MeleeMiss", RpcTarget.All);
         }
@@ -127,76 +89,60 @@ public class Thief3Controller : MonoBehaviourPunCallbacks, IMovementProvider, ID
         {
             photonView.RPC("RPC_MeleeHit", RpcTarget.All);
         }
-        
-        foreach (var hit in meleeHits)
+
+        foreach (var hit in hits)
         {
-            PoliceController guard = hit.transform.gameObject.GetComponent<PoliceController>();
-            if (guard != null)
+            if (hit.TryGetComponent<PoliceController>(out var guard))
             {
-                Debug.Log("Wham!");
                 guard.Stunned();
+                Debug.Log("Wham!");
             }
         }
     }
-    
-    public void Hit()
-    {
-        photonView.RPC("RPC_Hit", RpcTarget.All);
-    }
-    
-    public void Stunned()
-    {
-        photonView.RPC("RPC_Stunned", RpcTarget.All);
-    }
+
+
+
+    public void Hit() => photonView.RPC(nameof(RPC_Hit), RpcTarget.All);
+    public void Stunned() => photonView.RPC(nameof(RPC_Stunned), RpcTarget.All);
 
     [PunRPC]
     private void RPC_Hit()
     {
         _audioSource.maxDistance = meleeSoundRange;
         _audioSource.PlayOneShot(killed, 0.7f);
-        if (photonView.IsMine)
+        if (gameManager.CanRespawn())
         {
-            
-        }
-        if (_gameManager.CanRespawn())
-        {
-            _gameManager.LooterDied();
+            gameManager.LooterDied();
+            GetComponent<IRobber>().LoseLoot();
             isAlive = false;
             respawnTimer = 0;
             Respawn();
         }
         else
         {
-            _gameManager.LooterPermaDied();
+            gameManager.LooterPermaDied();
             isAlive = false;
             Destroy(gameObject);
         }
     }
-    
+
     [PunRPC]
     private void RPC_Stunned()
     {
-        if (photonView.IsMine)
-        {
-            
-        }
-        if (canBeStunned)
-        {
-            canBeStunned = false;
-            isStunned = true;
-            stunTimer = 0f;
-            stunCooldownTimer = 0f;
-            moveSpeed = initialMoveSpeed / 2f;
-        }
+        if (!canBeStunned) return;
+
+        canBeStunned = false;
+        stunCooldownTimer = 0f;
+        moveCtrl.SetStunned(stunTime);
     }
-    
+
     [PunRPC]
     private void RPC_MeleeMiss()
     {
         _audioSource.maxDistance = meleeSoundRange;
         _audioSource.PlayOneShot(meleeMiss, 0.7f);
     }
-    
+
     [PunRPC]
     private void RPC_MeleeHit()
     {
@@ -204,8 +150,5 @@ public class Thief3Controller : MonoBehaviourPunCallbacks, IMovementProvider, ID
         _audioSource.PlayOneShot(meleeHit, 0.7f);
     }
 
-    private void Respawn()
-    {
-        transform.position = _spawnPosition;
-    }
+    private void Respawn() => transform.position = spawnPosition;
 }
