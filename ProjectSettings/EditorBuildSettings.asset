@@ -20,4 +20,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Nivel Jugable.unity
     guid: c8d0f51ca542d474cbbc718f16d6944a
+  - enabled: 1
+    path: Assets/Scenes/Win-Lose/LootersWin.unity
+    guid: 152e50b2ab2d5c04b85df49280f8a7e7
+  - enabled: 1
+    path: Assets/Scenes/Win-Lose/PoliceWin.unity
+    guid: be638fbc2ef85cf478735fe0ccd93dc2
   m_configObjects: {}
