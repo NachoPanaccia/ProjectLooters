@@ -20,5 +20,5 @@ MonoBehaviour:
   price: 1000
   category: 2
   owner: 1
-  itemCarryLimit: 2
-  disableDashWhileCarrying: 0
+  itemCarryLimit: 3
+  can_dash_DashWhileCarrying: 1

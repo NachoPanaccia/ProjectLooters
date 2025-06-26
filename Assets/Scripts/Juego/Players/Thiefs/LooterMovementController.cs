@@ -11,7 +11,7 @@ public class LooterMovementController : MonoBehaviourPun, IMovementProvider
     [SerializeField] private float defaultDashForce = 7f;
     [SerializeField] private float dashDuration = 0.18f;
     private float baseSpeed;
-    private bool canDash;
+    public bool canDash;
     private float dashCooldown;
     private float dashForce;
     private float nextDashTime;

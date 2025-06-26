@@ -4,10 +4,14 @@ using UnityEngine;
 public class BackpackUpgradeData : UpgradeData
 {
     public int itemCarryLimit;
-    public bool disableDashWhileCarrying;
+    public bool can_dash_DashWhileCarrying;
 
     public override void ApplyUpgrade(GameObject targetPlayer)
     {
-        // Aca se va a aplicar la capacidad de carga a los jugadores
+        var lootHandler = targetPlayer.GetComponent<LooterUpgradeHandler>();
+        lootHandler.back_size = itemCarryLimit;
+
+        var movementHandler = targetPlayer.GetComponent<LooterMovementController>();
+        movementHandler.canDash = can_dash_DashWhileCarrying;
     }
 }
