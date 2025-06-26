@@ -46,13 +46,10 @@ public class LootSpawner : MonoBehaviourPunCallbacks
     {
         int total_pool = 0;
         foreach (var loot in loots) { total_pool += loot.spawn_weight; }
-        Debug.Log("TOTAL: " + total_pool);
         int roll = Random.Range(0, total_pool);
-        Debug.Log("ROLL: " + roll);
         int pool = 0;
         foreach(var loot in loots) {  
             pool += loot.spawn_weight;
-            Debug.Log("PULL: " + pool);
             if (pool >= roll) return loot;
         }
 
