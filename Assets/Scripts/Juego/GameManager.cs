@@ -20,11 +20,13 @@ public class GameManager : MonoBehaviour
     public UnityEvent onLooterPermaDied;
 
     public string policeName;
-    public Dictionary<string, bool> connected_player;
+    public bool[] connected_player = new bool[4];
     public UnityEvent forcePause = new UnityEvent();
     public UnityEvent forceUnPause = new UnityEvent();
     public UnityEvent forceLotersWin = new UnityEvent();
 
+    private UIManager _uiManager;
+    
     public static GameManager instance;
     private void Awake()
     {
@@ -47,11 +49,14 @@ public class GameManager : MonoBehaviour
         {
             LevelManager.Instance.con.AddListener(GameEnd);
         }
+        _uiManager = UIManager.instance;
+        _uiManager.UpdateRespawns(currentRespawns);
     }
 
     public void LooterDied()
     {
         currentRespawns--;
+        _uiManager.UpdateRespawns(currentRespawns);
     }
 
     public void LooterInitialized()

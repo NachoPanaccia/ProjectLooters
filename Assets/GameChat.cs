@@ -30,7 +30,7 @@ public class GameChat : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        Debug.Log("sgañsdjgfoikvnadofijkgnadofgjkn");
+        Debug.Log("sgaï¿½sdjgfoikvnadofijkgnadofgjkn");
         string mensaje = $"El jugador {otherPlayer.NickName} ha abandonado la sala.";
         Debug.Log(mensaje);
         string mensajeTotal = "Total jugadores en sala: " + PhotonNetwork.CurrentRoom.PlayerCount;
@@ -39,9 +39,9 @@ public class GameChat : MonoBehaviourPunCallbacks
         photonView.RPC("ShowMSG", RpcTarget.All, mensaje);
         photonView.RPC("ShowMSG", RpcTarget.All, mensajeTotal);
 
-        //int actorID = otherPlayer.ActorNumber;
-        //int slot = (int)PhotonNetwork.CurrentRoom.CustomProperties[$"slot_{actorID}"];
-        gameManager.connected_player[otherPlayer.NickName] = false;
+        int actorID = otherPlayer.ActorNumber; 
+        int slot = (int)PhotonNetwork.CurrentRoom.CustomProperties[$"slot_{actorID}"];
+        gameManager.connected_player[slot+1] = false;
         gameManager.forcePause.Invoke();
     }
 }

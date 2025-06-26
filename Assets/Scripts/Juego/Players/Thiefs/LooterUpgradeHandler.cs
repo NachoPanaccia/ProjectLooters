@@ -1,4 +1,5 @@
 
+using System;
 using UnityEngine;
 
 public class LooterUpgradeHandler : PlayerUpgradeHandler, IRobber
@@ -11,9 +12,20 @@ public class LooterUpgradeHandler : PlayerUpgradeHandler, IRobber
     public int Loot => loot;
 
     public override bool TieneFondos(int precio) => loot >= precio;
-    public override void Cobrar(int precio) => loot -= precio;
+    public override void Cobrar(int precio)
+    {
+        loot -= precio;
+        _uiManager.UpdateWallet(loot);
+    }
 
     public void AgregarLoot(int v) => loot += v;
+
+    private UIManager _uiManager;
+
+    private void Start()
+    {
+        _uiManager = UIManager.instance;
+    }
 
     public override void AplicarUpgrade(UpgradeData upg)
     {
@@ -28,16 +40,24 @@ public class LooterUpgradeHandler : PlayerUpgradeHandler, IRobber
 
         equipados[cat] = upg;
         base.AplicarUpgrade(upg);
+        _uiManager.UpdateWallet(loot);
     }
 
-    public void GetLoot(int value) => actual_loot += value;
+    public void GetLoot(int value) 
+    {
+        actual_loot += value;
+    }
 
     public void DepositLoot()
     {
         LevelManager.Instance.LooterDeposited(actual_loot);
         loot += actual_loot;
         actual_loot = 0;
+        _uiManager.UpdateWallet(loot);
     }
 
-    public void LoseLoot() => actual_loot = 0;
+    public void LoseLoot() 
+    {
+        actual_loot = 0;
+    }
 }

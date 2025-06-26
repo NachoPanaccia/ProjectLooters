@@ -50,7 +50,7 @@ public class GameInitializer : MonoBehaviourPunCallbacks
         yield return new WaitForSeconds(2);
         if (slot >= -1 && slot <= 2)
         {
-            GameManager.instance.connected_player[PhotonNetwork.LocalPlayer.NickName] = true;
+            GameManager.instance.connected_player[slot + 1] = true;
             if (slot == -1) GameManager.instance.policeName = PhotonNetwork.LocalPlayer.NickName;
         }
     }

@@ -9,9 +9,24 @@ public class PoliceUpgradeHandler : PlayerUpgradeHandler
     public int Dinero => dinero;
 
     public override bool TieneFondos(int precio) => dinero >= precio;
-    public override void Cobrar(int precio) => dinero -= precio;
+    public override void Cobrar(int precio)
+    {
+        dinero -= precio;
+        _uiManager.UpdateWallet(dinero);
+    }
+    
+    private UIManager _uiManager;
 
-    public void AgregarDinero(int v) => dinero += v;
+    private void Start()
+    {
+        _uiManager = UIManager.instance;
+    }
+
+    public void AgregarDinero(int v)
+    {
+        dinero += v;
+        _uiManager.UpdateWallet(dinero);
+    }
 
     public override void AplicarUpgrade(UpgradeData upg)
     {

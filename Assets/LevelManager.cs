@@ -20,6 +20,8 @@ public class LevelManager : MonoBehaviourPunCallbacks
     [Header("Events")]
     public UnityEvent<wincondition> con;
 
+    private UIManager _uiManager;
+
     private void Awake()
     {
         // Singleton
@@ -34,8 +36,10 @@ public class LevelManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
+        _uiManager = UIManager.instance;
         StartTimer();
         GameManager.instance.onLooterPermaDied.AddListener(PermaDeadCounter);
+        _uiManager.UpdateQuotaMax(objmoney);
     }
 
     private void Update()
@@ -56,11 +60,14 @@ public class LevelManager : MonoBehaviourPunCallbacks
     {
         timer = levelDuration;
         timerRunning = true;
+        _uiManager.UpdateTime(Mathf.RoundToInt(timer));
+        _uiManager.SetTimerState(true);
     }
 
     public void StopTimer()
     {
         timerRunning = false;
+        _uiManager.SetTimerState(false);
     }
 
     public float GetTimeRemaining()
@@ -88,9 +95,17 @@ public class LevelManager : MonoBehaviourPunCallbacks
     {
         photonView.RPC("OnConditionMet", RpcTarget.All,wincondition.copdead);
     }
+    
     public void LooterDeposited(int lootAmount)
     {
-        moneyCounter += lootAmount;
+        photonView.RPC("RPC_Deposited", RpcTarget.All, lootAmount);
+    }
+
+    [PunRPC]
+    private void RPC_Deposited(int amount)
+    {
+        moneyCounter += amount;
+        _uiManager.UpdateQuota(moneyCounter);
         if (moneyCounter >= objmoney)
         {
             photonView.RPC("OnConditionMet", RpcTarget.All,wincondition.quota);
