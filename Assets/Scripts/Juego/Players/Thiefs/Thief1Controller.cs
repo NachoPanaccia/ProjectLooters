@@ -8,6 +8,7 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber
 {
     [Header("Respawn")]
     [SerializeField] private float respawnTime = 3f;
+    [SerializeField] private AudioClip killed;
     private float respawnTimer;
     private bool isAlive = true;
     private Vector3 spawnPosition;
@@ -17,6 +18,9 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber
     [SerializeField] private Collider2D meleeCollider;
     [SerializeField] private ContactFilter2D contactFilter;
     private float meleeTimer;
+    [SerializeField] private AudioClip meleeHit;
+    [SerializeField] private AudioClip meleeMiss;
+    [SerializeField] private float meleeSoundRange = 15f;
 
     [Header("Stun")]
     [SerializeField] private float stunTime = 1.5f;
@@ -31,12 +35,14 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber
     public UnityEvent<int> DepositedLoot;
 
     private Rigidbody2D rb;
+    private AudioSource _audioSource;
     private GameManager gameManager;
     private LooterMovementController moveCtrl;
 
     
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody2D>();
         moveCtrl = GetComponent<LooterMovementController>();
         gameManager = GameManager.instance;
@@ -76,6 +82,15 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber
 
         var hits = new List<Collider2D>();
         meleeCollider.OverlapCollider(contactFilter, hits);
+        
+        if (hits.Count == 0)
+        {
+            photonView.RPC("RPC_MeleeMiss", RpcTarget.All);
+        }
+        else
+        {
+            photonView.RPC("RPC_MeleeHit", RpcTarget.All);
+        }
 
         foreach (var hit in hits)
         {
@@ -101,6 +116,8 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber
     [PunRPC]
     private void RPC_Hit()
     {
+        _audioSource.maxDistance = meleeSoundRange;
+        _audioSource.PlayOneShot(killed, 0.7f);
         if (gameManager.CanRespawn())
         {
             gameManager.LooterDied();
@@ -124,6 +141,20 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IRobber
         canBeStunned = false;
         stunCooldownTimer = 0f;
         moveCtrl.SetStunned(stunTime);
+    }
+    
+    [PunRPC]
+    private void RPC_MeleeMiss()
+    {
+        _audioSource.maxDistance = meleeSoundRange;
+        _audioSource.PlayOneShot(meleeMiss, 0.7f);
+    }
+    
+    [PunRPC]
+    private void RPC_MeleeHit()
+    {
+        _audioSource.maxDistance = meleeSoundRange;
+        _audioSource.PlayOneShot(meleeHit, 0.7f);
     }
     
     private void Respawn() => transform.position = spawnPosition;

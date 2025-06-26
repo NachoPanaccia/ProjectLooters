@@ -9,22 +9,28 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IMovementPro
 {
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private float respawnTime = 3f;
+    [SerializeField] private AudioClip killed;
     private float initialMoveSpeed;
     private float respawnTimer;
     private bool isAlive;
     private Rigidbody2D rb;
+    private AudioSource _audioSource;
     private Vector2 movement;
     private GameManager _gameManager;
     private Vector3 _spawnPosition;
     public Vector2 UltimaDireccion => movement;
 
-    [Header("Melee Parameters")]
+    [Header("Melee")]
     [SerializeField] private float _meleeTime = 2f;
     [SerializeField] private Collider2D _meleeCollider;
     [SerializeField] ContactFilter2D contactFilter2D;
+    private float _meleeTimer;
+    [SerializeField] private AudioClip meleeHit;
+    [SerializeField] private AudioClip meleeMiss;
+    [SerializeField] private float meleeSoundRange = 15f;
+
     [SerializeField] private float stunTime = 1.5f;
     [SerializeField] private float stunCooldownTime = 3f;
-    private float _meleeTimer;
     private float stunTimer;
     private bool isStunned;
     private float stunCooldownTimer;
@@ -35,11 +41,17 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IMovementPro
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody2D>();
         _gameManager = GameManager.instance;
         _spawnPosition = transform.position;
         _gameManager.LooterInitialized();
         initialMoveSpeed = moveSpeed;
+        
+        if (photonView.IsMine)
+        {
+            FindObjectOfType<CameraFollow>().SetTarget(transform);
+        }
     }
 
     private void Update()
@@ -116,6 +128,15 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IMovementPro
     {
         List<Collider2D> meleeHits = new List<Collider2D>();
         _meleeCollider.OverlapCollider(contactFilter2D, meleeHits);
+        
+        if (meleeHits.Count == 0)
+        {
+            photonView.RPC("RPC_MeleeMiss", RpcTarget.All);
+        }
+        else
+        {
+            photonView.RPC("RPC_MeleeHit", RpcTarget.All);
+        }
 
         foreach (var hit in meleeHits)
         {
@@ -141,6 +162,8 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IMovementPro
     [PunRPC]
     private void RPC_Hit()
     {
+        _audioSource.maxDistance = meleeSoundRange;
+        _audioSource.PlayOneShot(killed, 0.7f);
         if (photonView.IsMine)
         {
             
@@ -175,6 +198,20 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IRobber, IMovementPro
             stunCooldownTimer = 0f;
             moveSpeed = initialMoveSpeed / 2f;
         }
+    }
+    
+    [PunRPC]
+    private void RPC_MeleeMiss()
+    {
+        _audioSource.maxDistance = meleeSoundRange;
+        _audioSource.PlayOneShot(meleeMiss, 0.7f);
+    }
+    
+    [PunRPC]
+    private void RPC_MeleeHit()
+    {
+        _audioSource.maxDistance = meleeSoundRange;
+        _audioSource.PlayOneShot(meleeHit, 0.7f);
     }
 
     private void Respawn()

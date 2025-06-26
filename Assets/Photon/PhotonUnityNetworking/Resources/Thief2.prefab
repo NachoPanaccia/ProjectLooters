@@ -87,7 +87,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2046760840268671478}
   - component: {fileID: 4732315374962927986}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Triangle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,8 @@ GameObject:
   - component: {fileID: 2141130108342385891}
   - component: {fileID: 5347186686141144629}
   - component: {fileID: -1252845342898728247}
-  m_Layer: 6
+  - component: {fileID: 8990811050495712678}
+  m_Layer: 7
   m_Name: Thief2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -350,6 +351,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 5
   respawnTime: 3
+  killed: {fileID: 8300000, guid: 957a573c9ad343749b64e57822d619f8, type: 3}
   _meleeTime: 2
   _meleeCollider: {fileID: 1391518585858544724}
   contactFilter2D:
@@ -361,11 +363,14 @@ MonoBehaviour:
     useOutsideNormalAngle: 0
     layerMask:
       serializedVersion: 2
-      m_Bits: 0
+      m_Bits: 64
     minDepth: 0
     maxDepth: 0
     minNormalAngle: 0
     maxNormalAngle: 0
+  meleeHit: {fileID: 8300000, guid: 62db71ecff6ccd848bf54fd596b3e359, type: 3}
+  meleeMiss: {fileID: 8300000, guid: 4acdf312be2d90d43bcb2f3c4dbf45ea, type: 3}
+  meleeSoundRange: 15
   stunTime: 1.5
   stunCooldownTime: 3
   actual_loot: 0
@@ -418,6 +423,129 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugUpgrades: []
   loot: 0
+--- !u!82 &8990811050495712678
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7851205569575024567}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 15
+  Pan2D: 0
+  rolloffMode: 2
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.06666667
+      value: 1
+      inSlope: -15.005997
+      outSlope: -15.005997
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.13333334
+      value: 0.5
+      inSlope: -3.7514992
+      outSlope: -3.7514992
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.26666668
+      value: 0.25
+      inSlope: -0.9378748
+      outSlope: -0.9378748
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.53333336
+      value: 0.083496094
+      inSlope: -0.37658
+      outSlope: -0.37658
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.8908452
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: -0.06014632
+      outSlope: -0.06014632
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.49295774
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &8785633066297389703
 GameObject:
   m_ObjectHideFlags: 0
@@ -428,7 +556,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5133589697473474024}
   - component: {fileID: 1964900804504089594}
-  m_Layer: 6
+  m_Layer: 7
   m_Name: Square
   m_TagString: Untagged
   m_Icon: {fileID: 0}
