@@ -102,7 +102,7 @@ public class LevelManager : MonoBehaviourPunCallbacks
 
     // WIN ID = ( 1 = Tiempo , 2 = LootersPermaDead , 3 = Cop Died , 4 = Quota Reached)
     [PunRPC]
-    private void OnConditionMet( wincondition winid)
+    public void OnConditionMet( wincondition winid)
     {
         con?.Invoke(winid);
     }
