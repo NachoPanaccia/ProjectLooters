@@ -5,6 +5,8 @@ using UnityEngine;
 public class PoliceUpgradeHandler : PlayerUpgradeHandler
 {
     [SerializeField] private int dinero = 0;
+    [SerializeField] private UpgradeData armaInicial;
+    private PoliceController _policeController;
 
     public int Dinero => dinero;
 
@@ -20,6 +22,8 @@ public class PoliceUpgradeHandler : PlayerUpgradeHandler
     private void Start()
     {
         _uiManager = UIManager.instance;
+        _policeController = GetComponent<PoliceController>();
+        AplicarUpgrade(armaInicial);
     }
 
     public void AgregarDinero(int v)
@@ -38,6 +42,9 @@ public class PoliceUpgradeHandler : PlayerUpgradeHandler
             anterior.Unequip(gameObject);
             BorrarRegistros(anterior);
         }
+
+        var wupg = upg as WeaponUpgradeData;
+        if (wupg is not null) _policeController.CurrentWeapon = wupg;
 
         equipados[cat] = upg;
         base.AplicarUpgrade(upg);

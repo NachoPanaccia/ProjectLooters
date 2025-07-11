@@ -7,6 +7,7 @@ public class WeaponUpgradeData : UpgradeData
     public float reloadTime;
     public float fireRate;
     public float spread;
+    public int projectileNumber;
 
     public override void ApplyUpgrade(GameObject targetPlayer)
     {

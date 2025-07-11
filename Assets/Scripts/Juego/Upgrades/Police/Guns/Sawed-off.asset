@@ -23,4 +23,5 @@ MonoBehaviour:
   magazineSize: 1
   reloadTime: 4
   fireRate: 0.25
-  spread: 20
+  spread: 30
+  projectileNumber: 4

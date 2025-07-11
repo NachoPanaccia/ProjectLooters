@@ -11,7 +11,10 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI quotaMaxText;
     [SerializeField] private TextMeshProUGUI timeText;
     [SerializeField] private TextMeshProUGUI respawnsText;
-
+    [SerializeField] private TextMeshProUGUI maxBulletsText;
+    [SerializeField] private TextMeshProUGUI bulletsText;
+    [SerializeField] private GameObject bullets;
+    
     private float time;
     private int minutes;
     private int seconds;
@@ -67,5 +70,25 @@ public class UIManager : MonoBehaviour
     public void UpdateRespawns(int amount)
     {
         respawnsText.text = amount.ToString();
+    }
+
+    public void UpdateMaxBullets(int amount)
+    {
+        maxBulletsText.text = amount.ToString();
+    }
+
+    public void UpdateBullets(int amount)
+    {
+        bulletsText.text = amount.ToString();
+    }
+
+    public void HideBulletCount()
+    {
+        bullets.SetActive(false);
+    }
+
+    public void ShowBulletCount()
+    {
+        bullets.SetActive(true);
     }
 }

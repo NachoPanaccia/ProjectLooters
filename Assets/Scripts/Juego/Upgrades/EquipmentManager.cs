@@ -34,7 +34,7 @@ public class EquipmentManager : MonoBehaviour
         StartManager startManager = FindObjectOfType<StartManager>();
         if (startManager == null)
         {
-            Debug.LogError("EquipmentManager: No se encontró StartManager en la escena.");
+            Debug.LogError("EquipmentManager: No se encontrÃ³ StartManager en la escena.");
             return;
         }
 

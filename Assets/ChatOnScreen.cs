@@ -16,6 +16,6 @@ public class ChatOnScreen : MonoBehaviour
     {
         time += Time.deltaTime;
         if (time > timer) Destroy(gameObject);
-        Debug.Log("aaaaaaaaaaaaaa");
+        //Debug.Log("aaaaaaaaaaaaaa");
     }
 }

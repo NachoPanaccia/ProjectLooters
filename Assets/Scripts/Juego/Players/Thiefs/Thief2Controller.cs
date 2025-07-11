@@ -9,6 +9,7 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IDamageable
     [Header("Respawn")]
     [SerializeField] private float respawnTime = 3f;
     [SerializeField] private AudioClip killed;
+    [SerializeField] private SpriteRenderer spriteRenderer;
     private float respawnTimer;
     private bool isAlive = true;
     private Vector3 spawnPosition;
@@ -58,7 +59,12 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IDamageable
         if (!isAlive)
         {
             respawnTimer += Time.deltaTime;
-            if (respawnTimer >= respawnTime) isAlive = true;
+            if (respawnTimer >= respawnTime)
+            {
+                Respawn();
+                isAlive = true;
+                photonView.RPC("RPC_Respawn", RpcTarget.All);
+            }
             return;
         }
 
@@ -108,20 +114,21 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IDamageable
     [PunRPC]
     private void RPC_Hit()
     {
+        if (!isAlive) return;
+        isAlive = false;
+        spriteRenderer.color = new Color(255, 0, 0, 140);
+        
         _audioSource.maxDistance = meleeSoundRange;
         _audioSource.PlayOneShot(killed, 0.7f);
         if (gameManager.CanRespawn())
         {
             gameManager.LooterDied();
             GetComponent<IRobber>().LoseLoot();
-            isAlive = false;
             respawnTimer = 0;
-            Respawn();
         }
         else
         {
             gameManager.LooterPermaDied();
-            isAlive = false;
             Destroy(gameObject);
         }
     }
@@ -148,6 +155,12 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IDamageable
     {
         _audioSource.maxDistance = meleeSoundRange;
         _audioSource.PlayOneShot(meleeHit, 0.7f);
+    }
+    
+    [PunRPC]
+    private void RPC_Respawn()
+    {
+        spriteRenderer.color = new Color(255, 255, 255, 255);
     }
 
     private void Respawn() => transform.position = spawnPosition;

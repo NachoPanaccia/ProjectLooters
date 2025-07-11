@@ -352,6 +352,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   respawnTime: 3
   killed: {fileID: 8300000, guid: 21f2e30ae3125e24faf02b2eef62adb9, type: 3}
+  spriteRenderer: {fileID: 2425404403731385212}
   meleeCooldown: 2
   meleeCollider: {fileID: 7099840194379080703}
   contactFilter:

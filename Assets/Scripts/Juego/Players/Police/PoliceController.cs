@@ -1,7 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
+using Random = UnityEngine.Random;
 
 [RequireComponent(typeof(Rigidbody2D), typeof(PhotonView))]
 public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
@@ -10,10 +12,22 @@ public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] private LayerMask _noCopMask;
     [SerializeField] private AudioClip gunShot;
     [SerializeField] private AudioClip gunReloaded;
-    [SerializeField] private float gunCooldownTime = 2.5f;
-    [SerializeField] private float gunCooldownTimer;
     [SerializeField] private float gunSoundRange = 45f;
-    private bool canFire;
+    [SerializeField] private GameObject smokeEffect;
+    private float _gunCooldownTimer;
+    private bool _canFire;
+    private int _loadedBullets = 1;
+
+    [SerializeField] private WeaponUpgradeData currentWeapon;
+    public WeaponUpgradeData CurrentWeapon
+    {
+        get { return currentWeapon; }
+        set
+        {
+            _uiManager.UpdateMaxBullets(value.magazineSize);
+            currentWeapon = value;
+        }
+    }
 
     [Header("Melee")]
     [SerializeField] private float _meleeTime = 2f;
@@ -27,26 +41,32 @@ public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
     [Header("Stun")]
     [SerializeField] private float stunTime = 1.5f;
     [SerializeField] private float stunCooldownTime = 3f;
-    private float stunCooldownTimer;
-    private bool canBeStunned;
-    private float stunTimer;
-    private bool isStunned;
+    private float _stunCooldownTimer;
+    private bool _canBeStunned;
+    private float _stunTimer;
+    private bool _isStunned;
     
     [SerializeField] private float moveSpeed = 5f;
-    private float initialMoveSpeed;
-    private Rigidbody2D rb;
-    private Vector2 movement;
+    private float _initialMoveSpeed;
+    private Rigidbody2D _rb;
+    private Vector2 _movement;
     private AudioSource _audioSource;
+    private UIManager _uiManager;
     
-    private void Awake()
+    private void Start()
     {
         _audioSource = GetComponent<AudioSource>();
-        rb = GetComponent<Rigidbody2D>();
-        initialMoveSpeed = moveSpeed;
+        _rb = GetComponent<Rigidbody2D>();
+        _initialMoveSpeed = moveSpeed;
+        _uiManager = UIManager.instance;
 
         if (photonView.IsMine)
         {
             FindObjectOfType<CameraFollow>().SetTarget(transform);
+        }
+        else
+        {
+            _uiManager.HideBulletCount();
         }
     }
 
@@ -59,44 +79,63 @@ public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
             _meleeTimer += Time.deltaTime;
         }
         
-        if (isStunned)
+        if (_isStunned)
         {
-            stunTimer += Time.deltaTime;
-            if (stunTimer >= stunTime)
+            _stunTimer += Time.deltaTime;
+            if (_stunTimer >= stunTime)
             {
-                isStunned = false;
-                moveSpeed = initialMoveSpeed;
+                _isStunned = false;
+                moveSpeed = _initialMoveSpeed;
             }
         }
 
-        if (!canBeStunned)
+        if (!_canBeStunned)
         {
-            stunCooldownTimer += Time.deltaTime;
-            if (stunCooldownTimer >= stunCooldownTime)
+            _stunCooldownTimer += Time.deltaTime;
+            if (_stunCooldownTimer >= stunCooldownTime)
             {
-                canBeStunned = true;
+                _canBeStunned = true;
             }
         }
 
-        if (!canFire)
+        if (!_canFire)
         {
-            gunCooldownTimer += Time.deltaTime;
+            _gunCooldownTimer += Time.deltaTime;
+            if (_loadedBullets == 0)
+            {
+                if (_gunCooldownTimer >= currentWeapon.reloadTime)
+                {
+                    _canFire = true;
+                    _loadedBullets = currentWeapon.magazineSize;
+                    photonView.RPC("RPC_GunReloaded", RpcTarget.All);
+                    _uiManager.UpdateBullets(_loadedBullets);
+                }
+            }
+            else
+            {
+                if (_gunCooldownTimer >= 1 / currentWeapon.fireRate)
+                {
+                    _canFire = true;
+                    photonView.RPC("RPC_GunReloaded", RpcTarget.All);
+                }
+            }
+            /*gunCooldownTimer += Time.deltaTime;
             if (gunCooldownTimer >= gunCooldownTime)
             {
                 canFire = true;
                 photonView.RPC("RPC_GunReloaded", RpcTarget.All);
-            }
+            }*/
         }
         
-        movement.x = Input.GetAxisRaw("Horizontal");
-        movement.y = Input.GetAxisRaw("Vertical");
+        _movement.x = Input.GetAxisRaw("Horizontal");
+        _movement.y = Input.GetAxisRaw("Vertical");
 
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Vector2 lookDir = mousePosition - transform.position;
         float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
         transform.rotation = Quaternion.Euler(0f, 0f, angle);
 
-        if (Input.GetMouseButtonDown(0) && !isStunned && canFire)
+        if (Input.GetMouseButtonDown(0) && !_isStunned && _canFire)
         {
             Shoot(lookDir);
         }
@@ -111,29 +150,43 @@ public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
     {
         if (!photonView.IsMine) return;
 
-        rb.MovePosition(rb.position + movement * moveSpeed * Time.fixedDeltaTime);
+        _rb.MovePosition(_rb.position + _movement * moveSpeed * Time.fixedDeltaTime);
     }
 
-    private void Shoot(Vector3 mousePos)
+    private void Shoot(Vector3 mouseDir)
     {
-        canFire = false;
-        gunCooldownTimer = 0f;
-        photonView.RPC("RPC_ShotFired", RpcTarget.All);
-        Vector2 mousePos2d = new Vector2(mousePos.x, mousePos.y);
+        _canFire = false;
+        _loadedBullets--;
+        _uiManager.UpdateBullets(_loadedBullets);
+        _gunCooldownTimer = 0f;
+        
         Vector2 pos2d = new Vector2(transform.position.x, transform.position.y);
-        
-        RaycastHit2D hit = Physics2D.Raycast(pos2d, mousePos2d, Mathf.Infinity,_noCopMask);
-        
-        if (hit != false)
+        Vector2 mouseDir2d = new Vector2(mouseDir.x, mouseDir.y).normalized;
+
+        Vector2[] hitPoints = new Vector2[currentWeapon.projectileNumber];
+
+        for (int i = 0; i < currentWeapon.projectileNumber; i++)
         {
-            IDamageable robber = hit.transform.gameObject.GetComponent<IDamageable>();
-            if (robber != null)
+            float spreadAngle = Random.Range(-currentWeapon.spread / 2f, currentWeapon.spread / 2f);
+            Vector2 shotDir = Quaternion.AngleAxis(spreadAngle, Vector3.forward) * mouseDir2d;
+        
+            RaycastHit2D hit = Physics2D.Raycast(pos2d, shotDir, Mathf.Infinity,_noCopMask);
+            //Debug.DrawLine(pos2d, hit.point, Color.red, 10.0f);
+        
+            if (hit != false)
             {
-                Debug.Log("I got him!");
-                robber.Hit();
+                hitPoints[i] = hit.point;
+                //Instantiate(smokeEffect, hit.point, transform.rotation);
+                IDamageable robber = hit.transform.gameObject.GetComponent<IDamageable>();
+                if (robber != null)
+                {
+                    Debug.Log("I got him!");
+                    robber.Hit();
+                }
             }
         }
         
+        photonView.RPC("RPC_ShotFired", RpcTarget.All, hitPoints as Vector2[]);
     }
 
     private void MeleeAttack()
@@ -167,13 +220,13 @@ public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
         {
             Debug.Log("I'm whacked!");
         }
-        if (canBeStunned)
+        if (_canBeStunned)
         {
-            canBeStunned = false;
-            isStunned = true;
-            stunTimer = 0f;
-            stunCooldownTimer = 0f;
-            moveSpeed = initialMoveSpeed / 2f;
+            _canBeStunned = false;
+            _isStunned = true;
+            _stunTimer = 0f;
+            _stunCooldownTimer = 0f;
+            moveSpeed = _initialMoveSpeed / 2f;
         }
     }
 
@@ -192,10 +245,14 @@ public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
     }
     
     [PunRPC]
-    private void RPC_ShotFired()
+    private void RPC_ShotFired(Vector2[] hitPoints)
     {
         _audioSource.maxDistance = gunSoundRange;
         _audioSource.PlayOneShot(gunShot, 0.7f);
+        foreach(Vector2 hit in hitPoints)
+        {
+            Instantiate(smokeEffect, hit, transform.rotation);
+        }
     }
     
     [PunRPC]

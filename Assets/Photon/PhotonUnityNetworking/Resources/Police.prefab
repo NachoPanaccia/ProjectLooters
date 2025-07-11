@@ -354,9 +354,9 @@ MonoBehaviour:
     m_Bits: 1920
   gunShot: {fileID: 8300000, guid: 3a41df94f49a8134eb4b16fb8e5c4e10, type: 3}
   gunReloaded: {fileID: 8300000, guid: 8d3ce345093e0d94ca21cbcaeedb3483, type: 3}
-  gunCooldownTime: 2.5
-  gunCooldownTimer: 0
   gunSoundRange: 45
+  smokeEffect: {fileID: 9216755162089209217, guid: 3f4510a3cb5a2af4b94c33d733afde20, type: 3}
+  currentWeapon: {fileID: 0}
   _meleeTime: 2
   _meleeCollider: {fileID: 4016682577374904967}
   contactFilter2D:
@@ -428,6 +428,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   debugUpgrades: []
   dinero: 0
+  armaInicial: {fileID: 11400000, guid: e9120ce94f85ce746a3b3907aca8b215, type: 2}
 --- !u!82 &7966204738294742865
 AudioSource:
   m_ObjectHideFlags: 0

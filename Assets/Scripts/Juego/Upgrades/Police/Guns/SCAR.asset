@@ -21,6 +21,7 @@ MonoBehaviour:
   category: 0
   owner: 0
   magazineSize: 10
-  reloadTime: 5
+  reloadTime: 3
   fireRate: 2
-  spread: 5
+  spread: 15
+  projectileNumber: 1
