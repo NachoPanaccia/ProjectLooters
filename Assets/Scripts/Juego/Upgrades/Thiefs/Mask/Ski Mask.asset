@@ -17,7 +17,7 @@ MonoBehaviour:
     egg, but hey, anonymity is guaranteed.
   icon: {fileID: -1615463798, guid: 1998b9d947f1c3644b6bda710d2118db, type: 3}
   tier: 2
-  price: 1500
+  price: 3000
   category: 3
   owner: 1
   detectionRadius: 10

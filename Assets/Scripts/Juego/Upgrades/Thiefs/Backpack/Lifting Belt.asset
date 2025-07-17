@@ -16,8 +16,8 @@ MonoBehaviour:
   description: Always lift with your legs, not your back.
   icon: {fileID: 1130926058, guid: fa41ca5f4da1ae14e962690f5cb16eec, type: 3}
   tier: 1
-  price: 500
+  price: 1000
   category: 2
   owner: 1
   itemCarryLimit: 2
-  disableDashWhileCarrying: 1
+  can_dash_DashWhileCarrying: 0

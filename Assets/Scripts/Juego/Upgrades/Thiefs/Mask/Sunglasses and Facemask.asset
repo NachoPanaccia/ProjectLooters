@@ -17,7 +17,7 @@ MonoBehaviour:
     be in fashion."
   icon: {fileID: -1615463798, guid: 1998b9d947f1c3644b6bda710d2118db, type: 3}
   tier: 1
-  price: 750
+  price: 1000
   category: 3
   owner: 1
   detectionRadius: 5

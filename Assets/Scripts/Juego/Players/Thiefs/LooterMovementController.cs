@@ -47,7 +47,7 @@ public class LooterMovementController : MonoBehaviourPun, IMovementProvider
         {
             stunTimer += Time.deltaTime;
             if (stunTimer >= stunDuration) isStunned = false;
-            return; // sin input mientras está aturdido
+            return; // sin input mientras estÃ¡ aturdido
         }
 
         

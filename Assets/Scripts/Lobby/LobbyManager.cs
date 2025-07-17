@@ -14,31 +14,62 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsConnected)
         {
             PhotonNetwork.ConnectUsingSettings();
-            Debug.Log("Conectando a Photon...");
+            Debug.Log("Conectando a Photon…");
         }
         else
         {
-            JoinOrCreateRoom();
+            LaunchRoom();
         }
     }
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("Conectado a Photon Master Server.");
-        JoinOrCreateRoom();
+        Debug.Log("Conectado a Photon Master.");
+        LaunchRoom();
     }
 
-    private void JoinOrCreateRoom()
+    private void LaunchRoom()
     {
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = 4;
+        string roomName = string.IsNullOrEmpty(RoomLauncher.PendingRoomName)
+                        ? "DefaultLobby"
+                        : RoomLauncher.PendingRoomName;
 
-        PhotonNetwork.JoinOrCreateRoom("SalaLobbyPrincipal", roomOptions, TypedLobby.Default);
-        Debug.Log("Intentando unirse o crear la sala...");
+        RoomOptions opts = new RoomOptions
+        {
+            MaxPlayers = 4,
+            PlayerTtl = 0,
+            EmptyRoomTtl = 0
+        };
+
+        if (RoomLauncher.ShouldCreate)
+        {
+            PhotonNetwork.CreateRoom(roomName, opts, TypedLobby.Default);
+            Debug.Log($"Creando sala «{roomName}» …");
+        }
+        else
+        {
+            PhotonNetwork.JoinRoom(roomName);
+            Debug.Log($"Uniéndose a sala «{roomName}» …");
+        }
+    }
+
+    public override void OnCreateRoomFailed(short code, string message)
+    {
+        Debug.LogWarning($"Falló CreateRoom: {message}");
+        PhotonNetwork.LoadLevel("Menu Principal");
+    }
+
+    public override void OnJoinRoomFailed(short code, string message)
+    {
+        Debug.LogWarning($"Falló JoinRoom: {message}");
+        PhotonNetwork.LoadLevel("Menu Principal");
     }
 
     public override void OnJoinedRoom()
     {
+        PlayerPrefs.SetString("LastRoomName", PhotonNetwork.CurrentRoom.Name);
+        PlayerPrefs.Save();
+
         string mensaje = $"{PhotonNetwork.LocalPlayer.NickName}, te has conectado satisfactoriamente a la sala.";
         Debug.Log(mensaje);
         string mensajeTotal = "Total jugadores en sala: " + PhotonNetwork.CurrentRoom.PlayerCount;

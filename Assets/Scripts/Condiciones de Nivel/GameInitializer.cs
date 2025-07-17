@@ -54,7 +54,4 @@ public class GameInitializer : MonoBehaviourPunCallbacks
             if (slot == -1) GameManager.instance.policeName = PhotonNetwork.LocalPlayer.NickName;
         }
     }
-
-
-
 }

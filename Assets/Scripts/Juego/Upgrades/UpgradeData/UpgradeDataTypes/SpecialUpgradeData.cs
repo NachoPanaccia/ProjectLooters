@@ -7,6 +7,7 @@ public class SpecialUpgradeData : UpgradeData
 
     public override void ApplyUpgrade(GameObject targetPlayer)
     {
-        // Aca estaria la instanciación del arma especial
+        var lootHandler = targetPlayer.GetComponent<LooterUpgradeHandler>();
+        lootHandler.EnableFirearm();
     }
 }

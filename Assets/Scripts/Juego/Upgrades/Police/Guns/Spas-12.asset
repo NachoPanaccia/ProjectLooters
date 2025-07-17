@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Did we seriously raid an entire oil rig just for this??
   icon: {fileID: -1929617814, guid: d853a407c899c5e4c9a2d5ef42d0df6f, type: 3}
   tier: 2
-  price: 2000
+  price: 3000
   category: 0
   owner: 0
   magazineSize: 1

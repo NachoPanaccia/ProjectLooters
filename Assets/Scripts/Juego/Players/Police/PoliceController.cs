@@ -45,18 +45,25 @@ public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
     private bool _canBeStunned;
     private float _stunTimer;
     private bool _isStunned;
-    
+
+    [Header("General")]
+    [SerializeField] private bool isAlive = true;
     [SerializeField] private float moveSpeed = 5f;
+    [SerializeField] private AudioClip killed;
+    [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private int killingBounty;
     private float _initialMoveSpeed;
     private Rigidbody2D _rb;
     private Vector2 _movement;
     private AudioSource _audioSource;
     private UIManager _uiManager;
+    private PoliceUpgradeHandler _upgradeHandler;
     
     private void Start()
     {
         _audioSource = GetComponent<AudioSource>();
         _rb = GetComponent<Rigidbody2D>();
+        _upgradeHandler = GetComponent<PoliceUpgradeHandler>();
         _initialMoveSpeed = moveSpeed;
         _uiManager = UIManager.instance;
 
@@ -67,12 +74,13 @@ public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
         else
         {
             _uiManager.HideBulletCount();
+            _uiManager.ShowLootInventory();
         }
     }
 
     private void Update()
     {
-        if (!photonView.IsMine) return;
+        if (!photonView.IsMine || !isAlive) return;
 
         if (_meleeTimer < _meleeTime)
         {
@@ -181,6 +189,7 @@ public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
                 if (robber != null)
                 {
                     Debug.Log("I got him!");
+                    _upgradeHandler.AgregarDinero(killingBounty);
                     robber.Hit();
                 }
             }
@@ -262,9 +271,23 @@ public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
         _audioSource.PlayOneShot(gunReloaded, 0.7f);
     }
 
-    public void Hit()
-    {
+    public void Hit() => photonView.RPC(nameof(RPC_Hit), RpcTarget.All);
 
+    [PunRPC]
+    private void RPC_Hit()
+    {
+        float gameoverDelay = 2f;
+        isAlive = false;
+        _audioSource.maxDistance = meleeSoundRange;
+        _audioSource.PlayOneShot(killed, 0.7f);
+        spriteRenderer.color = new Color(255, 0, 0, 140);
+        Debug.Log("Mataron al guardia!");
+        StartCoroutine(PoliceDeath(gameoverDelay));
+    }
+    
+    IEnumerator PoliceDeath(float waitTime) {
+        yield return new WaitForSeconds(waitTime);
+        GameManager.instance.PoliceDied();
     }
 
     public void Stunned()
