@@ -9,7 +9,8 @@ public class BackpackUpgradeData : UpgradeData
     public override void ApplyUpgrade(GameObject targetPlayer)
     {
         var lootHandler = targetPlayer.GetComponent<LooterUpgradeHandler>();
-        lootHandler.back_size = itemCarryLimit;
+        //lootHandler.back_size = itemCarryLimit;
+        lootHandler.UpdateBackpack(itemCarryLimit);
 
         var movementHandler = targetPlayer.GetComponent<LooterMovementController>();
         movementHandler.canDash = can_dash_DashWhileCarrying;

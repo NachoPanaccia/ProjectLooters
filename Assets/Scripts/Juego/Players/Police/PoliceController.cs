@@ -67,6 +67,7 @@ public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
         else
         {
             _uiManager.HideBulletCount();
+            _uiManager.ShowLootInventory();
         }
     }
 

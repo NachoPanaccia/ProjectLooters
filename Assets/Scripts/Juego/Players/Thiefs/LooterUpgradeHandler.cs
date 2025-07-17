@@ -44,11 +44,12 @@ public class LooterUpgradeHandler : PlayerUpgradeHandler, IRobber
         _uiManager.UpdateWallet(loot);
     }
 
-    public bool GetLoot(int value) 
+    public bool GetLoot(int value, Sprite sprite) 
     {
         if (back_used >= back_size) return false;
         actual_loot += value;
         back_used += 1;
+        _uiManager.UpdateLootInSlots(sprite);
         return true;
     }
 
@@ -59,11 +60,18 @@ public class LooterUpgradeHandler : PlayerUpgradeHandler, IRobber
         actual_loot = 0;
         back_used = 0;
         _uiManager.UpdateWallet(loot);
+        _uiManager.EmptyLootSlots();
     }
 
     public void LoseLoot() 
     {
         actual_loot = 0;
         back_used = 0;
+    }
+
+    public void UpdateBackpack(int size)
+    {
+        back_size = size;
+        _uiManager.UpdateAvailableSlots(size);
     }
 }
