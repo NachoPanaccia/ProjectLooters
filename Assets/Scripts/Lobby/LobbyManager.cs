@@ -30,15 +30,27 @@ public class LobbyManager : MonoBehaviourPunCallbacks
 
     private void JoinOrCreateRoom()
     {
-        RoomOptions roomOptions = new RoomOptions();
-        roomOptions.MaxPlayers = 4;
+        RoomOptions roomOptions = new RoomOptions
+        {
+            MaxPlayers = 4,
+            PlayerTtl = 300_000,
+            EmptyRoomTtl = 600_000
+        };
+        string roomName = "SalaLobbyPrincipal";
 
-        PhotonNetwork.JoinOrCreateRoom("SalaLobbyPrincipal", roomOptions, TypedLobby.Default);
+        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
         Debug.Log("Intentando unirse o crear la sala...");
+
+        // Guardamos el nombre para posibles reconexiones
+        PlayerPrefs.SetString("LastRoomName", roomName);
+        PlayerPrefs.Save();
     }
 
     public override void OnJoinedRoom()
     {
+        PlayerPrefs.SetString("LastRoomName", PhotonNetwork.CurrentRoom.Name);
+        PlayerPrefs.Save();
+
         string mensaje = $"{PhotonNetwork.LocalPlayer.NickName}, te has conectado satisfactoriamente a la sala.";
         Debug.Log(mensaje);
         string mensajeTotal = "Total jugadores en sala: " + PhotonNetwork.CurrentRoom.PlayerCount;
