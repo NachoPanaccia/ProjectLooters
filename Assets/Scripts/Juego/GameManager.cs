@@ -80,6 +80,11 @@ public class GameManager : MonoBehaviour
         return (currentRespawns > 0);
     }
 
+    public void PoliceDied()
+    {
+        GameEnd(wincondition.copdead);
+    }
+
     [PunRPC]
     private void GameEnd( wincondition winid)
     {
@@ -112,7 +117,4 @@ public class GameManager : MonoBehaviour
     {
         return playingLooters;
     }
-
-
-    
 }

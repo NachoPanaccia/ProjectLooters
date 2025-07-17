@@ -28,6 +28,14 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] private float stunCooldownTime = 3f;
     private bool canBeStunned = true;
     private float stunCooldownTimer;
+    
+    [Header("Gun")] 
+    [SerializeField] private LayerMask _noLooterMask;
+    [SerializeField] private AudioClip gunShot;
+    [SerializeField] private float gunSoundRange = 45f;
+    [SerializeField] private GameObject smokeEffect;
+    [SerializeField] private float spread;
+    [SerializeField] private bool canFire;
 
 
     [Header("Events")]
@@ -35,8 +43,12 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IDamageable
 
     private Rigidbody2D rb;
     private AudioSource _audioSource;
+    private UIManager _uiManager;
     private GameManager gameManager;
     private LooterMovementController moveCtrl;
+    
+    //ELIMINAR ESTA LINEA CUANDO HAYA UN SOLO THIEFCONTROLLER
+    private LooterUpgradeHandler _upgradeHandler;
 
 
     private void Awake()
@@ -44,8 +56,13 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IDamageable
         _audioSource = GetComponent<AudioSource>();
         rb = GetComponent<Rigidbody2D>();
         moveCtrl = GetComponent<LooterMovementController>();
+        _uiManager = UIManager.instance;
         gameManager = GameManager.instance;
         spawnPosition = transform.position;
+        
+        //ELIMINAR ESTAS DOS LINEAS CUANDO HAYA UN SOLO THIEFCONTROLLER
+        _upgradeHandler = GetComponent<LooterUpgradeHandler>();
+        _upgradeHandler._thief2Controller = this;
 
         gameManager.LooterInitialized();
 
@@ -73,12 +90,46 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IDamageable
         meleeTimer = Mathf.Min(meleeTimer + Time.deltaTime, meleeCooldown);
         stunCooldownTimer = Mathf.Min(stunCooldownTimer + Time.deltaTime, stunCooldownTime);
         if (stunCooldownTimer >= stunCooldownTime) canBeStunned = true;
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 lookDir = mousePosition - transform.position;
 
         // Input Melee
-        if ((Input.GetKeyDown(KeyCode.V) || Input.GetMouseButtonDown(0)) && meleeTimer >= meleeCooldown)
+        if ((Input.GetKeyDown(KeyCode.V) || (Input.GetMouseButtonDown(0) && !canFire)) && meleeTimer >= meleeCooldown)
             MeleeAttack();
+        if (Input.GetMouseButtonDown(0) && canFire) Shoot(lookDir);
     }
 
+    private void Shoot(Vector3 mouseDir)
+    {
+        canFire = false;
+        _uiManager.HideBulletCount();
+        //_uiManager.UpdateBullets(_loadedBullets);
+        //_gunCooldownTimer = 0f;
+
+        Vector2 pos2d = new Vector2(transform.position.x, transform.position.y);
+        Vector2 mouseDir2d = new Vector2(mouseDir.x, mouseDir.y).normalized;
+
+        Vector2 hitPoint = new Vector2(); 
+        float spreadAngle = Random.Range(-spread / 2f, spread / 2f);
+        Vector2 shotDir = Quaternion.AngleAxis(spreadAngle, Vector3.forward) * mouseDir2d;
+
+        RaycastHit2D hit = Physics2D.Raycast(pos2d, shotDir, Mathf.Infinity, _noLooterMask);
+        //Debug.DrawLine(pos2d, hit.point, Color.red, 10.0f);
+
+        if (hit != false)
+        {
+            hitPoint = hit.point;
+            //Instantiate(smokeEffect, hit.point, transform.rotation);
+            IDamageable guard = hit.transform.gameObject.GetComponent<IDamageable>();
+            if (guard != null) 
+            {
+                Debug.Log("I got him!"); 
+                guard.Hit();
+            }
+        }
+        
+        photonView.RPC("RPC_ShotFired", RpcTarget.All, hitPoint);
+    }
 
     private void MeleeAttack()
     {
@@ -106,10 +157,24 @@ public class Thief2Controller : MonoBehaviourPunCallbacks, IDamageable
         }
     }
 
-
+    public void EnableFirearm()
+    {
+        canFire = true;
+        _uiManager.UpdateBullets(1);
+        _uiManager.UpdateMaxBullets(0);
+        _uiManager.ShowBulletCount();
+    }
 
     public void Hit() => photonView.RPC(nameof(RPC_Hit), RpcTarget.All);
     public void Stunned() => photonView.RPC(nameof(RPC_Stunned), RpcTarget.All);
+    
+    [PunRPC]
+    private void RPC_ShotFired(Vector2 hitPoint)
+    {
+        _audioSource.maxDistance = gunSoundRange;
+        _audioSource.PlayOneShot(gunShot, 0.7f);
+        Instantiate(smokeEffect, hitPoint, transform.rotation);
+    }
 
     [PunRPC]
     private void RPC_Hit()

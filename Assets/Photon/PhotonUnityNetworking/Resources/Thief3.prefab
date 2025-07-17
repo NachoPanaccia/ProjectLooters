@@ -374,6 +374,14 @@ MonoBehaviour:
   meleeSoundRange: 15
   stunTime: 1.5
   stunCooldownTime: 3
+  _noLooterMask:
+    serializedVersion: 2
+    m_Bits: 1856
+  gunShot: {fileID: 8300000, guid: 3a41df94f49a8134eb4b16fb8e5c4e10, type: 3}
+  gunSoundRange: 45
+  smokeEffect: {fileID: 9216755162089209217, guid: 3f4510a3cb5a2af4b94c33d733afde20, type: 3}
+  spread: 30
+  canFire: 0
   DepositedLoot:
     m_PersistentCalls:
       m_Calls: []
@@ -429,6 +437,9 @@ MonoBehaviour:
   loot: 0
   back_size: 1
   back_used: 0
+  _thief1Controller: {fileID: 0}
+  _thief2Controller: {fileID: 0}
+  _thief3Controller: {fileID: 0}
 --- !u!114 &3117348917919791886
 MonoBehaviour:
   m_ObjectHideFlags: 0
