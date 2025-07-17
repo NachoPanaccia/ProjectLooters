@@ -16,7 +16,7 @@ MonoBehaviour:
   description: "Someone has yee\u2019d their last haw."
   icon: {fileID: -1929617814, guid: d853a407c899c5e4c9a2d5ef42d0df6f, type: 3}
   tier: 1
-  price: 1500
+  price: 2000
   category: 0
   owner: 0
   magazineSize: 1

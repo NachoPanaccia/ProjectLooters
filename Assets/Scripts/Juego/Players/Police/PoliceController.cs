@@ -51,16 +51,19 @@ public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
     [SerializeField] private float moveSpeed = 5f;
     [SerializeField] private AudioClip killed;
     [SerializeField] private SpriteRenderer spriteRenderer;
+    [SerializeField] private int killingBounty;
     private float _initialMoveSpeed;
     private Rigidbody2D _rb;
     private Vector2 _movement;
     private AudioSource _audioSource;
     private UIManager _uiManager;
+    private PoliceUpgradeHandler _upgradeHandler;
     
     private void Start()
     {
         _audioSource = GetComponent<AudioSource>();
         _rb = GetComponent<Rigidbody2D>();
+        _upgradeHandler = GetComponent<PoliceUpgradeHandler>();
         _initialMoveSpeed = moveSpeed;
         _uiManager = UIManager.instance;
 
@@ -186,6 +189,7 @@ public class PoliceController : MonoBehaviourPunCallbacks, IDamageable
                 if (robber != null)
                 {
                     Debug.Log("I got him!");
+                    _upgradeHandler.AgregarDinero(killingBounty);
                     robber.Hit();
                 }
             }

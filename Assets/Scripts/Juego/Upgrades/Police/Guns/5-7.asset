@@ -16,7 +16,7 @@ MonoBehaviour:
   description: Great for eco rounds. Wait, what do you mean wrong IP?
   icon: {fileID: -947554699, guid: fa41ca5f4da1ae14e962690f5cb16eec, type: 3}
   tier: 1
-  price: 500
+  price: 1000
   category: 0
   owner: 0
   magazineSize: 1

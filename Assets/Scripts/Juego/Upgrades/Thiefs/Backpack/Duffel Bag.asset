@@ -17,7 +17,7 @@ MonoBehaviour:
     clown guys always used these!
   icon: {fileID: 1130926058, guid: fa41ca5f4da1ae14e962690f5cb16eec, type: 3}
   tier: 2
-  price: 1000
+  price: 3000
   category: 2
   owner: 1
   itemCarryLimit: 3

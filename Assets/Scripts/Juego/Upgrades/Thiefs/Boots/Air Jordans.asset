@@ -16,7 +16,7 @@ MonoBehaviour:
   description: 
   icon: {fileID: -1695492910, guid: fa41ca5f4da1ae14e962690f5cb16eec, type: 3}
   tier: 1
-  price: 500
+  price: 1000
   category: 1
   owner: 1
   habilitaDash: 1

@@ -188,8 +188,9 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IDamageable
         if (gameManager.CanRespawn())
         {
             gameManager.LooterDied();
-            GetComponent<IRobber>().LoseLoot();
+            //GetComponent<IRobber>().LoseLoot();
             respawnTimer = 0;
+            moveCtrl.SetStunned(respawnTime);
         }
         else
         {
@@ -228,5 +229,9 @@ public class Thief1Controller : MonoBehaviourPunCallbacks, IDamageable
         spriteRenderer.color = new Color(255, 255, 255, 255);
     }
     
-    private void Respawn() => transform.position = spawnPosition;
+    private void Respawn()
+    {
+        GetComponent<IRobber>().LoseLoot();
+        transform.position = spawnPosition;
+    }
 }

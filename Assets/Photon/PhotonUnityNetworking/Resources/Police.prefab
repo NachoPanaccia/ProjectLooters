@@ -382,6 +382,7 @@ MonoBehaviour:
   moveSpeed: 5
   killed: {fileID: 8300000, guid: 07a5f0b79b5338840be3be032248a522, type: 3}
   spriteRenderer: {fileID: 5537816177336382401}
+  killingBounty: 250
 --- !u!58 &548490392183866630
 CircleCollider2D:
   m_ObjectHideFlags: 0

@@ -17,7 +17,7 @@ MonoBehaviour:
     homicide charges. Will break after firing once, so you better be a good shot.
   icon: {fileID: -400313870, guid: 1998b9d947f1c3644b6bda710d2118db, type: 3}
   tier: 3
-  price: 2500
+  price: 7500
   category: 4
   owner: 1
   specialEffectNote: Lets you kill the guard, but it breaks after one shot.
