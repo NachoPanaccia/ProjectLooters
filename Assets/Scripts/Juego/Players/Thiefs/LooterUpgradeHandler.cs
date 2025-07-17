@@ -1,4 +1,5 @@
 
+using Photon.Pun;
 using System;
 using UnityEngine;
 
@@ -66,6 +67,7 @@ public class LooterUpgradeHandler : PlayerUpgradeHandler, IRobber
 
     public void DepositLoot()
     {
+        if(!photonView.IsMine) return;
         LevelManager.Instance.LooterDeposited(actual_loot);
         loot += actual_loot;
         actual_loot = 0;

@@ -14,6 +14,8 @@ public class GameInitializer : MonoBehaviourPunCallbacks
     [SerializeField] private Transform spawnPolicia;
     [SerializeField] private Transform[] spawnsLadrones;
 
+    [SerializeField] private Sprite[] spriteLadrones;
+
     GameManager gameManager;
     protected new void OnEnable()
     {     
@@ -40,7 +42,8 @@ public class GameInitializer : MonoBehaviourPunCallbacks
             case 0:
             case 1:
             case 2:
-                PhotonNetwork.Instantiate(prefabsLadrones[slot].name, spawnsLadrones[slot].position, Quaternion.identity);
+                GameObject ladron = PhotonNetwork.Instantiate(prefabsLadrones[0].name, spawnsLadrones[slot].position, Quaternion.identity);
+                ladron.GetComponent<SpriteRenderer>().sprite = spriteLadrones[slot];
                 break;
             default:
                 Debug.LogWarning("Slot inválido recibido.");

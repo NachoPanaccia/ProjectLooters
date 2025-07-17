@@ -1,8 +1,9 @@
 
+using Photon.Pun;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class PlayerUpgradeHandler : MonoBehaviour
+public abstract class PlayerUpgradeHandler : MonoBehaviourPunCallbacks
 {
     /* Este va a ser el inventario de mejoras para todos */
     private readonly HashSet<UpgradeData> upgrades = new();
