@@ -45,7 +45,11 @@ public class UIManager : MonoBehaviour
 
     private void Update()
     {
+        if (!timerRunning) return;
+
         time -= Time.deltaTime;
+        if (time < 0f) time = 0f;
+
         minutes = Mathf.FloorToInt(time / 60);
         seconds = Mathf.FloorToInt(time % 60);
         timeText.text = string.Format("{0:00}:{1:00}", minutes, seconds);
