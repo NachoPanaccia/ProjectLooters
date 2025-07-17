@@ -33,7 +33,10 @@ public class GameChat : MonoBehaviourPunCallbacks
         Debug.Log("sga�sdjgfoikvnadofijkgnadofgjkn");
         string mensaje = $"El jugador {otherPlayer.NickName} ha abandonado la sala.";
         Debug.Log(mensaje);
-        string mensajeTotal = "Total jugadores en sala: " + PhotonNetwork.CurrentRoom.PlayerCount;
+
+        int total = PhotonNetwork.CurrentRoom.PlayerCount;
+
+        string mensajeTotal = "Total jugadores en sala: " + total;
         Debug.Log(mensajeTotal);
 
         photonView.RPC("ShowMSG", RpcTarget.All, mensaje);
