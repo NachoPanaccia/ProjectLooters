@@ -78,6 +78,7 @@ public class LooterUpgradeHandler : PlayerUpgradeHandler, IRobber
     {
         actual_loot = 0;
         back_used = 0;
+        _uiManager.EmptyLootSlots();
     }
 
     public void UpdateBackpack(int size)
