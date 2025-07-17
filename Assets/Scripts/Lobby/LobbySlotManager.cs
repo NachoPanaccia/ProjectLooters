@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Photon.Pun;
 using Photon.Realtime;
+using ExitGames.Client.Photon;
 
 public class LobbySlotManager : MonoBehaviourPunCallbacks
 {
@@ -66,6 +67,7 @@ public class LobbySlotManager : MonoBehaviourPunCallbacks
         }
 
         estadoSlots[actorNumber] = (slot, nickname);
+        PhotonNetwork.CurrentRoom.GetPlayer(actorNumber).SetCustomProperties(new Hashtable { { "slot", slot } });
         ActualizarVisualGlobal();
     }
 
@@ -114,7 +116,7 @@ public class LobbySlotManager : MonoBehaviourPunCallbacks
             }
 
             photonView.RPC("RPC_ActualizarEstadoBotones", RpcTarget.All, ocupacion);
-            ValidarBotonComenzar(); // Actualiza el botón de jugar
+            ValidarBotonComenzar();
         }
     }
 
@@ -134,7 +136,6 @@ public class LobbySlotManager : MonoBehaviourPunCallbacks
 
         bool habilitado = (totalJugadores >= 2) && hayPolicia && hayLadron;
 
-        // Se envia este estado a todos los jugadores (incluyendo el master) para que todos tengan habilitado el boton de jugar.
         photonView.RPC("RPC_SetBotonIniciarPartidaEstado", RpcTarget.All, habilitado);
     }
 
@@ -162,6 +163,13 @@ public class LobbySlotManager : MonoBehaviourPunCallbacks
         if (info.Sender.ActorNumber == PhotonNetwork.LocalPlayer.ActorNumber)
         {
             PlayerPrefs.SetInt("MiSlot", slot);
+            
+            ExitGames.Client.Photon.Hashtable ht = new ExitGames.Client.Photon.Hashtable
+            {
+                { "slot",   slot },
+                { "prefab", slot == -1 ? "Guard" : $"Thief{slot}" }
+            };
+            PhotonNetwork.LocalPlayer.SetCustomProperties(ht);
         }
     }
 

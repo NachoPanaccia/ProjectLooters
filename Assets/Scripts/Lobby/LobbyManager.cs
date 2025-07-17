@@ -13,8 +13,13 @@ public class LobbyManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.IsConnected)
         {
+            string uid = PlayerPrefs.GetString("UID", System.Guid.NewGuid().ToString());
+            PlayerPrefs.SetString("UID", uid);
+
+            PhotonNetwork.AuthValues = new AuthenticationValues(uid);
+
             PhotonNetwork.ConnectUsingSettings();
-            Debug.Log("Conectando a Photon…");
+            Debug.Log($"Conectando a Photon… (UID: {uid})");
         }
         else
         {
@@ -37,7 +42,7 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         RoomOptions opts = new RoomOptions
         {
             MaxPlayers = 4,
-            PlayerTtl = 0,
+            PlayerTtl = 300_000,
             EmptyRoomTtl = 0
         };
 
