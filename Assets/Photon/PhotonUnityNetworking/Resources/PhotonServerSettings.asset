@@ -65,6 +65,8 @@ MonoBehaviour:
   - OnConditionMet
   - RPC_Deposited
   - RPC_Respawn
+  - PauseGame
+  - UnpauseGame
   DisableAutoOpenWizard: 1
   ShowSettings: 1
   DevRegionSetOnce: 1
