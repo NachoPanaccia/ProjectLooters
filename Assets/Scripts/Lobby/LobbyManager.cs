@@ -14,35 +14,55 @@ public class LobbyManager : MonoBehaviourPunCallbacks
         if (!PhotonNetwork.IsConnected)
         {
             PhotonNetwork.ConnectUsingSettings();
-            Debug.Log("Conectando a Photon...");
+            Debug.Log("Conectando a Photon…");
         }
         else
         {
-            JoinOrCreateRoom();
+            LaunchRoom();
         }
     }
 
     public override void OnConnectedToMaster()
     {
-        Debug.Log("Conectado a Photon Master Server.");
-        JoinOrCreateRoom();
+        Debug.Log("Conectado a Photon Master.");
+        LaunchRoom();
     }
 
-    private void JoinOrCreateRoom()
+    private void LaunchRoom()
     {
-        RoomOptions roomOptions = new RoomOptions
+        string roomName = string.IsNullOrEmpty(RoomLauncher.PendingRoomName)
+                        ? "DefaultLobby"
+                        : RoomLauncher.PendingRoomName;
+
+        RoomOptions opts = new RoomOptions
         {
             MaxPlayers = 4,
             PlayerTtl = 0,
             EmptyRoomTtl = 0
         };
-        string roomName = "SalaLobbyPrincipal";
 
-        PhotonNetwork.JoinOrCreateRoom(roomName, roomOptions, TypedLobby.Default);
-        Debug.Log("Intentando unirse o crear la sala...");
+        if (RoomLauncher.ShouldCreate)
+        {
+            PhotonNetwork.CreateRoom(roomName, opts, TypedLobby.Default);
+            Debug.Log($"Creando sala «{roomName}» …");
+        }
+        else
+        {
+            PhotonNetwork.JoinRoom(roomName);
+            Debug.Log($"Uniéndose a sala «{roomName}» …");
+        }
+    }
 
-        PlayerPrefs.SetString("LastRoomName", roomName);
-        PlayerPrefs.Save();
+    public override void OnCreateRoomFailed(short code, string message)
+    {
+        Debug.LogWarning($"Falló CreateRoom: {message}");
+        PhotonNetwork.LoadLevel("Menu Principal");
+    }
+
+    public override void OnJoinRoomFailed(short code, string message)
+    {
+        Debug.LogWarning($"Falló JoinRoom: {message}");
+        PhotonNetwork.LoadLevel("Menu Principal");
     }
 
     public override void OnJoinedRoom()
